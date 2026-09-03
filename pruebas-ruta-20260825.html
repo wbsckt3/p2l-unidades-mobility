@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Diseño de pruebas de ruta · 20260825 · MobileTec</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --baas: #1d4ed8;
+      --baas-soft: #dbeafe;
+      --empresa: #6d28d9;
+      --empresa-soft: #ede9fe;
+      --conductor: #0f766e;
+      --conductor-soft: #ccfbf1;
+      --solicitante: #c2410c;
+      --solicitante-soft: #ffedd5;
+      --ok: #15803d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 480px at 10% -10%, #dbeafe 0%, transparent 55%),
+        radial-gradient(900px 420px at 100% 0%, #ede9fe 0%, transparent 50%),
+        var(--bg);
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 28px 18px 64px;
+    }
+    header {
+      margin-bottom: 22px;
+    }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+    }
+    .brand-row__label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .brand-row__logos {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .brand-row__logo {
+      height: 52px;
+      width: auto;
+      max-width: min(180px, 38vw);
+      object-fit: contain;
+      display: block;
+    }
+    .brand-row__logo--p2l {
+      height: 48px;
+      width: 78px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .brand-row__plus {
+      font-size: 1.75rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--muted);
+      user-select: none;
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 4vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 40rem;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 0;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+    .chip--baas { background: var(--baas-soft); color: var(--baas); border-color: #bfdbfe; }
+    .chip--empresa { background: var(--empresa-soft); color: var(--empresa); border-color: #ddd6fe; }
+    .chip--conductor { background: var(--conductor-soft); color: var(--conductor); border-color: #99f6e4; }
+    .chip--solicitante { background: var(--solicitante-soft); color: var(--solicitante); border-color: #fed7aa; }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 18px 16px;
+      margin-top: 14px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+    }
+    section h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    ol, ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    li { margin: 0.35rem 0; }
+    .role {
+      font-weight: 800;
+      padding: 0.05em 0.28em;
+      border-radius: 0.35em;
+    }
+    .role-baas { color: var(--baas); background: var(--baas-soft); }
+    .role-empresa { color: var(--empresa); background: var(--empresa-soft); }
+    .role-conductor { color: var(--conductor); background: var(--conductor-soft); }
+    .role-solicitante { color: var(--solicitante); background: var(--solicitante-soft); }
+    .shared {
+      color: #0369a1;
+      background: #e0f2fe;
+      font-weight: 800;
+      padding: 0.05em 0.28em;
+      border-radius: 0.35em;
+    }
+    code.shared, .mono.shared {
+      color: #0369a1;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+    }
+    .h2-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      margin: 0 0 10px;
+    }
+    .h2-row h2 {
+      margin: 0;
+    }
+    .profile-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .orb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(15, 23, 42, 0.08);
+    }
+    .orb--baas { background: var(--baas); }
+    .orb--empresa { background: var(--empresa); }
+    .orb--conductor { background: var(--conductor); }
+    .orb--solicitante { background: var(--solicitante); }
+    .orb--shared { background: #0284c7; }
+    .mini-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+    .mini-chip--empresa { background: var(--empresa-soft); color: var(--empresa); border-color: #ddd6fe; }
+    .mini-chip--conductor { background: var(--conductor-soft); color: var(--conductor); border-color: #99f6e4; }
+    .mini-chip--solicitante { background: var(--solicitante-soft); color: var(--solicitante); border-color: #fed7aa; }
+    .mini-chip--shared { background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+    .grid {
+      display: grid;
+      gap: 10px;
+    }
+    @media (min-width: 720px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+    .kv {
+      display: grid;
+      gap: 4px 12px;
+      grid-template-columns: minmax(9rem, 38%) 1fr;
+      align-items: start;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--line);
+      font-size: 0.95rem;
+    }
+    .kv:last-child { border-bottom: 0; }
+    .kv dt {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.86rem;
+    }
+    .kv dd {
+      margin: 0;
+      font-weight: 700;
+      word-break: break-word;
+    }
+    a {
+      color: inherit;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+    }
+    a:hover { opacity: 0.85; }
+    code, .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88em;
+      font-weight: 700;
+      background: #f1f5f9;
+      padding: 0.12em 0.35em;
+      border-radius: 6px;
+    }
+    .note {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .note strong { color: var(--ink); }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand-row" aria-label="Powered by P2L y MobileTec">
+        <span class="brand-row__label">Powered by</span>
+        <span class="brand-row__logos">
+          <img class="brand-row__logo brand-row__logo--p2l" src="assets/logo-p2l.png" alt="P2L" width="48" height="48" />
+          <span class="brand-row__plus" aria-hidden="true">+</span>
+          <img class="brand-row__logo" src="assets/mobilitec-logo.png" alt="MobileTec" width="160" height="52" />
+        </span>
+      </div>
+      <p class="kicker">MobileTec · Diseño de pruebas</p>
+      <h1>Diseño de pruebas de ruta · 20260825</h1>
+      <p class="sub">
+        Prueba de punta a punta: interacción
+        <span class="role role-solicitante">solicitante</span> ↔
+        <span class="role role-conductor">conductor</span>,
+        tarifa automática, ruta, indicaciones y llegada a destino.
+      </p>
+      <div class="legend" aria-label="Leyenda de roles">
+        <span class="chip chip--baas"><span class="dot"></span>Admin BAAS Tenant</span>
+        <span class="chip chip--empresa"><span class="dot"></span>Admin de empresa</span>
+        <span class="chip chip--conductor"><span class="dot"></span>Conductor</span>
+        <span class="chip chip--solicitante"><span class="dot"></span>Solicitante</span>
+        <span class="chip" style="background:#e0f2fe;color:#0369a1;border-color:#7dd3fc;"><span class="dot"></span>ID / clave compartidos</span>
+      </div>
+    </header>
+
+    <section>
+      <h2>Objetivo de las pruebas</h2>
+      <p style="margin:0 0 10px;color:var(--muted);font-size:0.95rem;">¿Qué lograríamos con esta prueba?</p>
+      <ol>
+        <li>Que la interacción entre <span class="role role-solicitante">solicitante</span> y <span class="role role-conductor">conductor</span> funcione correctamente.</li>
+        <li>Que una vez el <span class="role role-conductor">conductor</span> tome el servicio se calcule automáticamente el valor.</li>
+        <li>Que se visualice la ruta a seguir por parte del <span class="role role-conductor">conductor</span>.</li>
+        <li>Que se visualicen las indicaciones de conducción, la distancia y el tiempo total.</li>
+        <li>Que el sistema notifique que ha llegado a su destino.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>De parte del <span class="role role-solicitante">solicitante</span></h2>
+      <ol>
+        <li>Que solicite el servicio buscando la dirección o punto de interés (calle con número, urbanización, cancha, estadio, centro comercial, iglesia, etc.).</li>
+        <li>Que el <span class="role role-solicitante">solicitante</span> pueda confirmar la tarifa.</li>
+        <li>Que el <span class="role role-solicitante">solicitante</span> pueda ver en el mapa dónde viene el vehículo que lo va a recoger y el tiempo de llegada.</li>
+      </ol>
+    </section>
+
+    <section>
+      <div class="h2-row">
+        <h2>Instancia · <span class="role role-baas">BAAS Tenant</span></h2>
+        <span class="profile-mark" title="Perfil de esta instancia">
+          <span class="orb orb--baas" aria-hidden="true"></span>
+          <span class="mini-chip mini-chip--shared" style="background:var(--baas-soft);color:var(--baas);border-color:#bfdbfe;">Admin BAAS</span>
+        </span>
+      </div>
+      <dl class="grid">
+        <div class="kv">
+          <dt>URL BAAS Tenant aislado</dt>
+          <dd><a href="https://www.refactorii.com/p2l-tenant/baas-tenant-dashboard" target="_blank" rel="noopener">baas-tenant-dashboard</a></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="role role-baas">Admin BAAS Tenant</span></dt>
+          <dd class="mono">jaalza@gmail.com</dd>
+        </div>
+        <div class="kv">
+          <dt>ID tenant</dt>
+          <dd><code>6a8cdd03e7a107e907122ac9</code></dd>
+        </div>
+        <div class="kv">
+          <dt>Clave tenant</dt>
+          <dd><code>d6a7fb39b05f296e44565899</code></dd>
+        </div>
+      </dl>
+    </section>
+
+    <section>
+      <div class="h2-row">
+        <h2>Instancia · Creación y mantenimiento empresas del tenant</h2>
+        <span class="profile-mark" aria-label="Perfiles de esta instancia">
+          <span class="orb orb--empresa" aria-hidden="true"></span>
+          <span class="mini-chip mini-chip--empresa">Admin empresa</span>
+        </span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:12px;">
+        Aquí el <span class="role role-empresa">admin empresa</span> genera el
+        <span class="shared">ID</span> y <span class="shared">clave de empresa</span>
+        que luego usa la instancia <strong>Flutter app</strong>
+        (<span class="orb orb--shared" aria-hidden="true" style="margin:0 2px;vertical-align:middle;"></span>.
+      </p>
+      <dl class="grid">
+        <div class="kv">
+          <dt>URL n empresas (tenant aislado)</dt>
+          <dd><a href="https://www.refactorii.com/p2l-tenant/unidades-dashboard/6a8cdd03e7a107e907122ac9" target="_blank" rel="noopener">unidades-dashboard/<code>6a8cdd03…</code></a></dd>
+        </div>
+        <div class="kv">
+          <dt>Empresa creada por <span class="role role-baas">Admin BAAS Tenant</span></dt>
+          <dd><span class="role role-empresa">Tests MobileTec</span></dd>
+        </div>
+        <div class="kv">
+          <dt>Correo <span class="role role-empresa">admin empresa</span> (agregado por <span class="role role-baas">Admin BAAS Tenant</span>)</dt>
+          <dd class="mono">wbsct2@gmail.com</dd>
+        </div>
+        <div class="kv">
+          <dt>URL empresa</dt>
+          <dd><a href="https://www.refactorii.com/p2l-tenant/unidades-dashboard/" target="_blank" rel="noopener">unidades-dashboard/</a></dd>
+        </div>
+        <div class="kv">
+          <dt>
+            <span class="orb orb--shared" aria-hidden="true" style="margin-right:4px;vertical-align:middle;"></span>
+            ID empresa (acceso <span class="role role-conductor">conductores</span>)
+          </dt>
+          <dd><code class="shared">6a8cdddfe7a107e907122af5</code></dd>
+        </div>
+        <div class="kv">
+          <dt>
+            <span class="orb orb--shared" aria-hidden="true" style="margin-right:4px;vertical-align:middle;"></span>
+            Clave empresa (acceso <span class="role role-conductor">conductores</span>)
+          </dt>
+          <dd><code class="shared">6e86f528514f0d92ada919bd</code></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="role role-conductor">Conductores</span> registrados por <span class="role role-empresa">admin empresa</span></dt>
+          <dd>
+            <div class="mono">wbsckt3@gmail.com</div>
+            <div class="mono" style="margin-top:4px;">marcorivera5050@gmail.com</div>
+          </dd>
+        </div>
+      </dl>
+      <p class="note">
+        <span class="mono">marcorivera5050@gmail.com</span> quedó como
+        <span class="role role-conductor">driver</span> de
+        <strong>Test MobileTec</strong> (plan Enterprise · admin
+        <span class="mono">wbsckt2@gmail.com</span>).
+        Para agregar otro <span class="role role-conductor">conductor</span> debe proporcionarse el correo Gmail
+        para que el <span class="role role-empresa">admin empresa</span> lo registre en la empresa.
+      </p>
+    </section>
+
+    <section>
+      <div class="h2-row">
+        <h2>Flutter app</h2>
+        <span class="profile-mark" aria-label="Perfiles de esta instancia">
+          <span class="orb orb--conductor" aria-hidden="true"></span>
+          <span class="mini-chip mini-chip--conductor">Conductor</span>
+          <span class="orb orb--solicitante" aria-hidden="true"></span>
+          <span class="mini-chip mini-chip--solicitante">Solicitante</span>
+        </span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:12px;">
+        Usa el mismo <span class="shared">ID</span> y <span class="shared">clave de empresa</span>
+        generados arriba por el <span class="role role-empresa">admin empresa</span>
+        <span class="orb orb--shared" aria-hidden="true" style="margin:0 2px;vertical-align:middle;"></span>.
+      </p>
+      <dl class="grid">
+        <div class="kv">
+          <dt>Acceso <span class="role role-conductor">conductor</span></dt>
+          <dd>
+            <div class="mono">wbsckt3@gmail.com</div>
+            <div class="mono" style="margin-top:4px;">marcorivera5050@gmail.com</div>
+          </dd>
+        </div>
+        <div class="kv">
+          <dt>
+            <span class="orb orb--shared" aria-hidden="true" style="margin-right:4px;vertical-align:middle;"></span>
+            ID empresa
+          </dt>
+          <dd><code class="shared">6a8cdddfe7a107e907122af5</code></dd>
+        </div>
+        <div class="kv">
+          <dt>
+            <span class="orb orb--shared" aria-hidden="true" style="margin-right:4px;vertical-align:middle;"></span>
+            Password empresa
+          </dt>
+          <dd><code class="shared">6e86f528514f0d92ada919bd</code></dd>
+        </div>
+      </dl>
+    </section>
+
+    <footer>
+      MobileTec · Diseño de pruebas de ruta 20260825 ·
+      <span class="role role-baas">Admin BAAS</span> ·
+      <span class="role role-empresa">admin empresa</span> ·
+      <span class="role role-conductor">conductor</span> ·
+      <span class="role role-solicitante">solicitante</span> ·
+      <span class="shared">ID/clave compartidos</span> (cian) entre empresa y Flutter.
+    </footer>
+  </div>
+</body>
+</html>

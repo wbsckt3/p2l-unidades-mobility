@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="P2L es una plataforma geográfica que conecta oferta y demanda de movilidad, bienes, servicios y domicilios mediante canales geográficos, geovallas y broadcast." data-i18n-meta="meta.description" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title data-i18n="meta.title_fleet">P2L Empresa — Convierte tu ubicación en un canal de ventas</title>
+  <link rel="icon" href="assets/logo-p2l.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --indigo-50: #eef2ff;
+      --indigo-100: #e0e7ff;
+      --indigo-200: #c7d2fe;
+      --indigo-500: #6366f1;
+      --indigo-600: #4f46e5;
+      --indigo-700: #4338ca;
+      --indigo-800: #3730a3;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --white: #ffffff;
+      --shadow: 0 18px 48px rgba(15, 23, 42, 0.12);
+      --radius: 16px;
+      --header-h: 72px;
+      --profile-primary: var(--indigo-600);
+      --profile-primary-mid: var(--indigo-500);
+      --profile-primary-hover: var(--indigo-700);
+      --profile-primary-deep: var(--indigo-800);
+      --profile-primary-light: var(--indigo-50);
+      --profile-primary-100: var(--indigo-100);
+      --profile-primary-border: var(--indigo-200);
+      --profile-primary-ink: var(--indigo-700);
+      --profile-shadow: rgba(79, 70, 229, 0.28);
+    }
+    body[data-mode="passenger"] {
+      --profile-primary: #0d9488;
+      --profile-primary-mid: #14b8a6;
+      --profile-primary-hover: #0f766e;
+      --profile-primary-deep: #115e59;
+      --profile-primary-light: #f0fdfa;
+      --profile-primary-100: #ccfbf1;
+      --profile-primary-border: #99f6e4;
+      --profile-primary-ink: #0f766e;
+      --profile-shadow: rgba(13, 148, 136, 0.32);
+    }
+    body[data-mode="driver"] {
+      --profile-primary: #0284c7;
+      --profile-primary-mid: #0ea5e9;
+      --profile-primary-hover: #0369a1;
+      --profile-primary-deep: #075985;
+      --profile-primary-light: #f0f9ff;
+      --profile-primary-100: #e0f2fe;
+      --profile-primary-border: #bae6fd;
+      --profile-primary-ink: #0369a1;
+      --profile-shadow: rgba(2, 132, 199, 0.28);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--white);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+
+    .container {
+      width: min(1140px, calc(100% - 32px));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 100;
+      height: var(--header-h);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .site-header.is-scrolled {
+      border-color: var(--line);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+    .site-header__inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      line-height: 0;
+    }
+    .brand__logo {
+      height: 44px;
+      width: 44px;
+      max-width: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav a {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav a:hover { color: var(--ink); background: var(--profile-primary-light); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn--primary {
+      background: linear-gradient(135deg, var(--profile-primary-mid), var(--profile-primary-hover));
+      color: var(--white);
+      box-shadow: 0 10px 28px var(--profile-shadow);
+    }
+    .btn--primary:hover { box-shadow: 0 14px 32px var(--profile-shadow); }
+    .btn--outline {
+      border: 2px solid var(--profile-primary-border);
+      color: var(--profile-primary-ink);
+      background: var(--white);
+    }
+    .btn--outline:hover { background: var(--profile-primary-light); }
+    .btn--ghost {
+      color: var(--profile-primary-ink);
+      background: var(--profile-primary-light);
+    }
+    .btn--lg { padding: 14px 28px; font-size: 1rem; }
+    .btn.is-active {
+      background: linear-gradient(135deg, var(--profile-primary-mid), var(--profile-primary-hover));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 10px 28px var(--profile-shadow);
+    }
+    .btn--outline.is-active {
+      border-color: transparent;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--ink);
+    }
+
+    .hero {
+      padding: calc(var(--header-h) + 48px) 0 72px;
+      background:
+        radial-gradient(ellipse 80% 60% at 100% 0%, rgba(20, 184, 166, 0.18), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 0% 100%, rgba(13, 148, 136, 0.12), transparent 55%),
+        linear-gradient(180deg, #f8fffe 0%, #ffffff 100%);
+      overflow: hidden;
+    }
+    .hero__grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--profile-primary-light);
+      border: 1px solid var(--profile-primary-border);
+      color: var(--profile-primary-ink);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .hero__title {
+      margin: 0 0 16px;
+      font-size: clamp(2.1rem, 5vw, 3.35rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+    }
+    .hero__title em {
+      font-style: normal;
+      color: var(--profile-primary);
+    }
+    .hero__lead {
+      margin: 0 0 28px;
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      color: var(--muted);
+      max-width: 34rem;
+    }
+    .hero__cta-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .hero__ctas {
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      align-items: stretch;
+      justify-content: start;
+      gap: 12px;
+      margin-bottom: 0;
+      width: max-content;
+      max-width: 100%;
+    }
+    .hero__ctas .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    /* Empresa: 4 CTAs en rejilla 2×2 (Usuario | Operativo / Empresa | Tarifas) */
+    body[data-mode="fleet"] .hero__ctas {
+      grid-template-columns: repeat(2, minmax(0, max-content));
+    }
+    .hero__badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-radius: 14px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+    .hero__badge-icon {
+      font-size: 1.55rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .hero__badge strong { color: var(--ink); font-size: 1.05em; }
+
+    .phone-mock {
+      position: relative;
+      width: min(320px, 88%);
+      margin-inline: auto;
+      aspect-ratio: 9 / 18;
+      border-radius: 36px;
+      padding: 12px;
+      background: linear-gradient(160deg, #1e293b, #0f172a);
+      box-shadow: var(--shadow);
+    }
+    .phone-mock::before {
+      content: "";
+      position: absolute;
+      inset: -20% -30% auto auto;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(20, 184, 166, 0.35), transparent 70%);
+      pointer-events: none;
+    }
+    .phone-mock__screen {
+      height: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .phone-mock__map {
+      position: absolute;
+      inset: 0;
+      background:
+        center / cover no-repeat url("assets/mapa.png");
+      transition: background-image 0.25s ease;
+    }
+    /* Flota/empresa: misma enmarcación edge-to-edge que mapa.png; contain evita recortar números */
+    .phone-mock--fleet .phone-mock__screen {
+      background: #fff;
+    }
+    .phone-mock--fleet .phone-mock__map {
+      background:
+        #fff center top / contain no-repeat url("assets/movil_empresa.png");
+    }
+    .phone-mock--fleet .phone-mock__top,
+    .phone-mock--fleet .phone-mock__card {
+      display: none;
+    }
+    .phone-mock__top {
+      position: relative;
+      z-index: 2;
+      padding: 14px 14px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.55), transparent);
+    }
+    .phone-mock__top img {
+      display: none;
+    }
+    .phone-mock__pill {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--profile-primary);
+      color: #fff;
+    }
+    .phone-mock__card {
+      position: relative;
+      z-index: 2;
+      margin: auto 12px 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 20px rgba(15,23,42,0.18);
+    }
+    .phone-mock__card strong { display: block; font-size: 0.82rem; margin-bottom: 4px; }
+    .phone-mock__card span { font-size: 0.72rem; color: var(--muted); }
+
+    .section { padding: 72px 0; }
+    .section--alt { background: #f8fafc; }
+    .section__head {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 40px;
+    }
+    .section__head h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.65rem, 3.5vw, 2.25rem);
+      letter-spacing: -0.02em;
+    }
+    #geo-canales .section__head {
+      max-width: 920px;
+    }
+    #geo-canales .section__head h2,
+    #geo-canales .section__head .geo-pillars {
+      font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+      line-height: 1.35;
+      letter-spacing: -0.015em;
+    }
+    #geo-canales .geo-pillars {
+      margin: 0 0 12px;
+      font-weight: 700;
+      color: #64748b;
+    }
+    #geo-canales .section__head p.geo-lead {
+      margin: 0;
+      max-width: 720px;
+      margin-inline: auto;
+    }
+    #geo-canales .benefit__icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      font-size: 2.2rem;
+      margin-bottom: 18px;
+    }
+    #geo-canales .service__tag {
+      font-size: 0.86rem;
+      padding: 6px 12px;
+    }
+    #geo-canales .benefit h3 { font-size: 1.28rem; }
+    #geo-canales .benefit p { font-size: 1.02rem; }
+    .section__head p { margin: 0; color: var(--muted); }
+
+    .benefits, .services, .steps, .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .benefit, .admin-card {
+      padding: 28px 24px;
+      border-radius: var(--radius);
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 30px rgba(15,23,42,0.04);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .benefit:hover, .admin-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px var(--profile-shadow);
+    }
+    .benefit__icon, .admin-card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      background: var(--profile-primary-light);
+      margin-bottom: 16px;
+    }
+    .benefit h3, .admin-card h3 { margin: 0 0 8px; font-size: 1.1rem; }
+    .benefit p, .admin-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    .service {
+      padding: 22px;
+      border-radius: var(--radius);
+      background: var(--white);
+      border: 1px solid var(--line);
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .service:hover {
+      border-color: var(--profile-primary-border);
+      box-shadow: 0 12px 32px var(--profile-shadow);
+    }
+    .service__tag {
+      align-self: flex-start;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--profile-primary-ink);
+      background: var(--profile-primary-light);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .service h3 { margin: 0; font-size: 1.05rem; }
+    .service p { margin: 0; color: var(--muted); font-size: 0.92rem; flex: 1; }
+
+    .step { text-align: center; padding: 24px 16px; }
+    .step__num {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 14px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--profile-primary-ink);
+      background: linear-gradient(135deg, var(--profile-primary-light), var(--profile-primary-100));
+      border: 1px solid var(--profile-primary-border);
+    }
+    .step h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    .step p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+    .highlight {
+      padding: 40px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--profile-primary-hover), var(--profile-primary-mid));
+      color: #fff;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      box-shadow: 0 20px 50px var(--profile-shadow);
+    }
+    .highlight h2 { margin: 0 0 10px; font-size: clamp(1.4rem, 3vw, 1.9rem); }
+    .highlight p { margin: 0; opacity: 0.92; max-width: 520px; }
+    .highlight .btn--outline {
+      border-color: rgba(255,255,255,0.5);
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+    .highlight .btn--outline:hover { background: rgba(255,255,255,0.2); }
+
+    .banner {
+      padding: 28px 32px;
+      border-radius: var(--radius);
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .banner h3 { margin: 0 0 6px; font-size: 1.1rem; }
+    .banner p { margin: 0; color: var(--muted); font-size: 0.92rem; max-width: 560px; }
+
+    .driver-cta {
+      text-align: center;
+      padding: 56px 24px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(20,184,166,0.15), transparent 50%),
+        var(--profile-primary-light);
+      border: 1px solid var(--profile-primary-100);
+    }
+    .driver-cta img {
+      display: none;
+    }
+    .driver-cta h2 { margin: 0 0 10px; font-size: clamp(1.5rem, 3vw, 2rem); }
+    .driver-cta p { margin: 0 auto 24px; color: var(--muted); max-width: 520px; }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .plan {
+      padding: 22px 18px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 100%;
+    }
+    .plan--starter { border-top: 4px solid #22c55e; }
+    .plan--growth { border-top: 4px solid #3b82f6; }
+    .plan--business { border-top: 4px solid #8b5cf6; }
+    .plan--enterprise { border-top: 4px solid #ef4444; }
+    .plan__tier {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .plan h3 { margin: 0; font-size: 1.05rem; }
+    .plan__price {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--profile-primary-ink);
+    }
+    .plan__micro { margin: 0; font-size: 0.85rem; color: var(--muted); }
+    .plan ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      color: #334155;
+      font-size: 0.88rem;
+      flex: 1;
+    }
+    .plan li { margin-bottom: 6px; }
+    .plan__billing {
+      margin: 0;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .plan__billing a {
+      color: var(--profile-primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .plan__billing a:hover { text-decoration: underline; }
+
+    .enterprise-tenant {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 2px solid var(--profile-primary-border);
+    }
+    .enterprise-tenant__head { margin-bottom: 20px; }
+    .enterprise-tenant__head h3 {
+      margin: 0 0 8px;
+      font-size: clamp(1.35rem, 3vw, 1.75rem);
+      color: var(--profile-primary-deep);
+    }
+    .enterprise-tenant__factor {
+      margin: 0 0 20px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: var(--profile-primary-light);
+      border: 1px solid var(--profile-primary-border);
+    }
+    .enterprise-tenant__factor h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--profile-primary-deep);
+    }
+    .enterprise-table-wrap {
+      overflow-x: auto;
+      margin: 0 0 20px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .enterprise-table {
+      width: 100%;
+      min-width: 880px;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+    .enterprise-table th {
+      background: var(--profile-primary-light);
+      color: var(--profile-primary-deep);
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 1px solid var(--profile-primary-border);
+    }
+    .enterprise-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      color: #334155;
+      white-space: nowrap;
+    }
+    .enterprise-table tr:last-child td { border-bottom: none; }
+    .enterprise-table tr:nth-child(even) td { background: #f8fafc; }
+    .enterprise-table strong { color: var(--ink); }
+    .enterprise-table .price { font-weight: 800; color: var(--profile-primary-ink); white-space: nowrap; }
+    .enterprise-shared {
+      padding: 18px 20px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      font-size: 0.88rem;
+    }
+    .enterprise-shared h4 { margin: 0 0 10px; font-size: 0.95rem; }
+    .enterprise-shared ul {
+      margin: 0;
+      padding-left: 1.15rem;
+      columns: 2;
+      column-gap: 24px;
+    }
+    @media (max-width: 720px) {
+      .enterprise-shared ul { columns: 1; }
+    }
+
+    .geo-slogan {
+      display: inline-block;
+      margin: 0 0 14px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--profile-primary-light);
+      color: var(--profile-primary-ink);
+      font-weight: 800;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .mode-panel[hidden] { display: none !important; }
+    body:not([data-mode="fleet"]) .fleet-only { display: none !important; }
+
+    .footer {
+      background: #0f172a;
+      color: #cbd5e1;
+      padding: 48px 0 28px;
+      font-size: 0.9rem;
+    }
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(3, 1fr);
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+    .footer h4 { margin: 0 0 12px; color: #fff; font-size: 0.95rem; }
+    .footer ul { list-style: none; margin: 0; padding: 0; }
+    .footer li { margin-bottom: 8px; }
+    .footer a { color: #94a3b8; }
+    .footer a:hover { color: #fff; }
+    .footer__brand strong { color: #fff; font-size: 1.15rem; display: block; margin-bottom: 10px; }
+    .footer__copy {
+      padding-top: 20px;
+      border-top: 1px solid #1e293b;
+      color: #64748b;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+    .footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px 10px;
+      margin: 0 0 14px;
+      font-size: 0.9rem;
+    }
+    .footer__legal a {
+      color: var(--profile-primary-border);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 600;
+    }
+    .footer__legal a:hover { color: #fff; }
+    .footer__legal-sep { color: #64748b; }
+
+    @media (max-width: 1100px) {
+      .plans { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 901px) {
+      .hero__cta-wrap { flex-wrap: nowrap; }
+      .hero__ctas {
+        grid-template-columns: repeat(2, max-content);
+        justify-content: start;
+      }
+    }
+    @media (max-width: 900px) {
+      .hero__grid { grid-template-columns: 1fr; text-align: center; }
+      .hero__lead { margin-inline: auto; }
+      .hero__cta-wrap { flex-direction: column; align-items: center; }
+      .hero__ctas {
+        justify-content: center;
+        justify-items: stretch;
+        margin-inline: auto;
+      }
+      .hero__badges { justify-content: center; }
+      .phone-mock { margin-top: 12px; }
+      .benefits, .services, .steps, .admin-grid { grid-template-columns: 1fr; }
+      .highlight { grid-template-columns: 1fr; text-align: center; }
+      .highlight p { margin-inline: auto; }
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      .nav {
+        display: none;
+        position: absolute;
+        top: var(--header-h);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px 16px 16px;
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 12px 32px rgba(15,23,42,0.08);
+      }
+      .nav.is-open { display: flex; }
+      .nav a, .nav .btn { width: 100%; justify-content: center; }
+      .menu-toggle { display: inline-flex; }
+      .header-cta-desktop { display: none; }
+      .header-actions { gap: 8px; }
+      .qa-lang-switch__btn { min-width: 2rem; padding: 5px 8px; }
+      .banner { padding: 20px; }
+      .footer__grid { grid-template-columns: 1fr; }
+      .plans { grid-template-columns: 1fr; }
+      .brand__logo { height: 40px; width: 40px; max-width: 40px; }
+    }
+    @media (min-width: 721px) {
+      .nav-cta-mobile { display: none; }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .qa-lang-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 3px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+    }
+    .qa-lang-switch__btn {
+      min-width: 2.25rem;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #64748b;
+      cursor: pointer;
+    }
+    .qa-lang-switch__btn--active {
+      background: var(--profile-primary);
+      color: #fff;
+      box-shadow: 0 2px 8px var(--profile-shadow);
+    }
+
+    .hero__ctas [data-mode="passenger"]:not(.is-active) {
+      border-color: #99f6e4;
+      color: #0f766e;
+    }
+    .hero__ctas [data-mode="passenger"]:not(.is-active):hover {
+      background: #f0fdfa;
+    }
+    .hero__ctas [data-mode="driver"]:not(.is-active) {
+      border-color: #bae6fd;
+      color: #0369a1;
+    }
+    .hero__ctas [data-mode="driver"]:not(.is-active):hover {
+      background: #f0f9ff;
+    }
+    .hero__ctas [data-mode="fleet"]:not(.is-active) {
+      border-color: var(--indigo-200);
+      color: var(--indigo-700);
+    }
+    .hero__ctas [data-mode="fleet"]:not(.is-active):hover {
+      background: var(--indigo-50);
+    }
+
+    .wa-float {
+      position: fixed;
+      right: max(18px, env(safe-area-inset-right, 18px));
+      bottom: max(18px, env(safe-area-inset-bottom, 18px));
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #25d366;
+      color: #fff;
+      text-decoration: none;
+      box-shadow: 0 6px 22px rgba(37, 211, 102, 0.45);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .wa-float:hover,
+    .wa-float:focus-visible {
+      transform: translateY(-3px) scale(1.04);
+      background: #20bd5a;
+      box-shadow: 0 10px 28px rgba(37, 211, 102, 0.55);
+      outline: none;
+    }
+    .wa-float__icon {
+      font-size: 1.85rem;
+      line-height: 1;
+    }
+    @media (max-width: 420px) {
+      .wa-float {
+        width: 52px;
+        height: 52px;
+        right: max(14px, env(safe-area-inset-right, 14px));
+        bottom: max(14px, env(safe-area-inset-bottom, 14px));
+      }
+      .wa-float__icon { font-size: 1.65rem; }
+    }
+  </style>
+</head>
+<body data-mode="fleet">
+  <header class="site-header" id="header">
+    <div class="container site-header__inner">
+      <a href="#" class="brand" data-mode="fleet" data-i18n-aria="nav.home" aria-label="P2L inicio">
+        <img class="brand__logo" src="assets/logo-p2l.png" alt="P2L" width="44" height="44" />
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" type="button" data-i18n-aria="nav.menu_open" aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+      <nav class="nav" id="mainNav" data-i18n-aria="nav.main" aria-label="Principal">
+        <a href="#fleet-beneficios" data-nav="beneficios" data-i18n="nav.benefits">Beneficios</a>
+        <a href="#fleet-servicios" data-nav="servicios" data-i18n="nav.services">Servicios</a>
+        <a href="#fleet-como" data-nav="como" data-i18n="nav.how">Cómo funciona</a>
+        <a href="#enterprise-tenant" id="navAudienceLink" data-nav="cta" data-i18n="nav.plans">Planes</a>
+        <a href="tarifas-y-pagos.html" class="fleet-only" data-i18n="nav.payments">Tarifas y pagos</a>
+        <a class="btn btn--ghost nav-cta-mobile" id="headerCtaMobile" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard" data-platform-cta data-i18n="nav.use_tuki">Ir a la plataforma</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="qa-lang-switch" role="group" data-i18n-aria="nav.language" aria-label="Idioma">
+          <button type="button" class="qa-lang-switch__btn qa-lang-switch__btn--active" data-set-locale="es" aria-pressed="true">ES</button>
+          <button type="button" class="qa-lang-switch__btn" data-set-locale="en" aria-pressed="false">EN</button>
+        </div>
+        <a class="btn btn--primary header-cta-desktop" id="headerCta" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard" data-platform-cta data-i18n="nav.use_tuki">Ir a la plataforma</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <div class="hero__eyebrow" id="heroEyebrow">🏢 Empresa · Broadcast de canal geográfico</div>
+          <h1 class="hero__title" id="heroTitle">Convierte tu ubicación en un <em>canal de ventas</em></h1>
+          <p class="hero__lead" id="heroLead">
+            Activa el broadcast de tu canal geográfico (geovalla) y permite que personas y operadores descubran tu negocio, productos y servicios cuando estén cerca. Tu empresa. Tu zona. Tu canal.
+          </p>
+          <div class="hero__cta-wrap">
+            <div class="hero__ctas" role="tablist" data-i18n-aria="nav.profile_tabs" aria-label="Elige tu perfil">
+              <button type="button" class="btn btn--outline btn--lg" data-mode="passenger" aria-pressed="false" data-i18n="modes.passenger">Usuario</button>
+              <button type="button" class="btn btn--outline btn--lg" data-mode="driver" aria-pressed="false" data-i18n="modes.driver">Operativo</button>
+              <button type="button" class="btn btn--primary btn--lg is-active" data-mode="fleet" aria-pressed="true" data-i18n="modes.fleet">Empresa</button>
+              <a class="btn btn--primary btn--lg fleet-only" href="tarifas-y-pagos.html" data-i18n="nav.payments">Tarifas y pagos</a>
+            </div>
+          </div>
+          <div class="hero__badges" id="heroBadges">
+            <span class="hero__badge"><span class="hero__badge-icon" aria-hidden="true">📡</span> <strong>Broadcast</strong> geovalla y suscripción</span>
+            <span class="hero__badge"><span class="hero__badge-icon" aria-hidden="true">💬</span> <strong>Chat</strong> con quien se suscribe</span>
+            <span class="hero__badge"><span class="hero__badge-icon" aria-hidden="true">🛍️</span> <strong>Oferta</strong> bienes, servicios, domicilios</span>
+          </div>
+        </div>
+
+        <div class="hero__visual" aria-hidden="true">
+          <div class="phone-mock phone-mock--fleet" id="phoneMock">
+            <div class="phone-mock__screen">
+              <div class="phone-mock__map" id="phoneMap" aria-hidden="true"></div>
+              <div class="phone-mock__top">
+                <span class="phone-mock__pill" id="phonePill">Broadcast activo</span>
+              </div>
+              <div class="phone-mock__card">
+                <strong id="phoneCardTitle">Tu negocio en el mapa</strong>
+                <span id="phoneCardSub">Broadcast · Oferta · Chat</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="geo-canales">
+      <div class="container">
+        <div class="section__head">
+          <p class="geo-slogan" data-i18n="geo.slogan">Tu ubicación conecta la oferta con la demanda</p>
+          <h2 data-i18n="geo.heading">Una plataforma. Tres experiencias.</h2>
+          <h3 class="geo-pillars" data-i18n="geo.pillars">Movilidad | Bienes y servicios | Domicilios</h3>
+          <p class="geo-lead" data-i18n="geo.lead">
+            P2L conecta personas, empresas, bienes y servicios según su ubicación. Todo conectado por canales geográficos, geovallas y broadcast.
+          </p>
+        </div>
+        <div class="benefits">
+          <article class="benefit">
+            <div class="benefit__icon">🏠</div>
+            <span data-i18n="geo.airbnb_tag" class="service__tag">Bienes y servicios</span>
+            <h3 data-i18n="geo.airbnb_title">Marketplace local, con broadcast</h3>
+            <p data-i18n="geo.airbnb_text">Descubre negocios, propiedades, productos y servicios cerca de ti. Una referencia Airbnb-like: la oferta local aparece cuando estás en la zona.</p>
+          </article>
+          <article class="benefit">
+            <div class="benefit__icon">🛵</div>
+            <span data-i18n="geo.delivery_tag" class="service__tag">Domicilios</span>
+            <h3 data-i18n="geo.delivery_title">Solicita lo que opera en tu zona</h3>
+            <p data-i18n="geo.delivery_text">Restaurantes y comercios definen su radio. El usuario pide productos y servicios por el canal — una referencia Rappi-like, dentro de P2L.</p>
+          </article>
+          <article class="benefit">
+            <div class="benefit__icon">📍</div>
+            <span data-i18n="geo.geofence_tag" class="service__tag">Broadcast</span>
+            <h3 data-i18n="geo.geofence_title">Geovalla y suscripción al canal</h3>
+            <p data-i18n="geo.geofence_text">La empresa activa un broadcast (geovalla), publica su oferta y las personas cercanas se suscriben al canal y chatean. Al regresar a la zona, pueden volver a conectar.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PASAJERO ========== -->
+    <div class="mode-panel" data-panel="passenger" hidden>
+      <section class="section section--alt" id="passenger-beneficios">
+        <div class="container">
+          <div class="section__head">
+            <h2 data-i18n="passenger.benefits_title">Viaja mejor en tu ciudad</h2>
+            <p data-i18n="passenger.benefits_lead">P2L conecta pasajeros con conductores en tu zona, con herramientas pensadas para moverte rápido y con confianza.</p>
+          </div>
+          <div class="benefits">
+            <article class="benefit">
+              <div class="benefit__icon">🚗</div>
+              <h3 data-i18n="passenger.b1_title">Movilidad</h3>
+              <p data-i18n="passenger.b1_text">Encuentra conductores activos cerca de ti y solicita viajes cuando los necesites, a cualquier hora del día.</p>
+            </article>
+            <article class="benefit">
+              <div class="benefit__icon">🛍️</div>
+              <h3 data-i18n="passenger.b2_title">Descubre</h3>
+              <p data-i18n="passenger.b2_text">Cotiza antes de viajar y conoce el valor del trayecto sin sorpresas. Pagas lo acordado, sin complicaciones.</p>
+            </article>
+            <article class="benefit">
+              <div class="benefit__icon">🛵</div>
+              <h3 data-i18n="passenger.b3_title">Domicilios</h3>
+              <p data-i18n="passenger.b3_text">Sigue el recorrido en el mapa, chatea durante el viaje y cuenta con herramientas de seguridad en la app.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="passenger-servicios">
+        <div class="container">
+          <div class="section__head">
+            <h2 data-i18n="passenger.services_title">Hay un perfil P2L para ti</h2>
+            <p data-i18n="passenger.services_lead">Como pasajero pides el viaje, ves el mapa en vivo y coordinas la recogida sin fricción.</p>
+          </div>
+          <div class="services">
+            <article class="service">
+              <span data-i18n="passenger.s1_tag" class="service__tag">Pasajero</span>
+              <h3 data-i18n="passenger.s1_title">P2L Viaje</h3>
+              <p data-i18n="passenger.s1_text">Solicita un viaje desde tu celular, indica origen y destino, y recibe propuestas de conductores cercanos.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="passenger.s2_tag" class="service__tag">Tiempo real</span>
+              <h3 data-i18n="passenger.s2_title">Mapa en vivo</h3>
+              <p data-i18n="passenger.s2_text">Visualiza el recorrido, el estado del viaje y la ubicación durante todo el servicio.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="passenger.s3_tag" class="service__tag">Comunicación</span>
+              <h3 data-i18n="passenger.s3_title">Chat en el viaje</h3>
+              <p data-i18n="passenger.s3_text">Coordina detalles de recogida y entrega sin salir de la aplicación.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="passenger.s4_tag" class="service__tag">Cercanos</span>
+              <h3 data-i18n="passenger.s4_title">Descubre comercios y servicios</h3>
+              <p data-i18n="passenger.s4_text">Entras al radio de un restaurante, tienda, arriendo tipo Airbnb o domicilio tipo Rappi y se abre el canal de la empresa. Suscríbete y, la próxima vez, te avisamos con el chat.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="passenger.s5_tag" class="service__tag">Historial</span>
+              <h3 data-i18n="passenger.s5_title">Mis viajes</h3>
+              <p data-i18n="passenger.s5_text">Consulta solicitudes anteriores, estados completados y tu actividad reciente.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="passenger.s6_tag" class="service__tag">Confianza</span>
+              <h3 data-i18n="passenger.s6_title">Estado del viaje</h3>
+              <p data-i18n="passenger.s6_text">Sabe si tu conductor está en camino, en el punto de encuentro o finalizando el trayecto.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="passenger-como">
+        <div class="container">
+          <div class="section__head">
+            <h2 data-i18n="passenger.how_title">Utiliza P2L en 3 pasos</h2>
+            <p data-i18n="passenger.how_lead">Entra con tu cuenta Google y empieza a moverte en minutos.</p>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="step__num">1</div>
+              <h3 data-i18n="passenger.step1_title">Inicia sesión</h3>
+              <p data-i18n="passenger.step1_text">Accede con Google desde la web o tu dispositivo. Sin formularios largos.</p>
+            </article>
+            <article class="step">
+              <div class="step__num">2</div>
+              <h3 data-i18n="passenger.step2_title">Pide tu viaje</h3>
+              <p data-i18n="passenger.step2_text">Indica origen y destino, revisa la cotización y solicita un conductor cerca de ti.</p>
+            </article>
+            <article class="step">
+              <div class="step__num">3</div>
+              <h3 data-i18n="passenger.step3_title">Viaja con confianza</h3>
+              <p data-i18n="passenger.step3_text">Sigue el mapa, chatea y cierra el viaje cuando llegues a tu destino.</p>
+            </article>
+          </div>
+          <div style="margin-top: 40px; text-align: center;">
+            <a data-i18n="passenger.start_free" class="btn btn--primary btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades">Empezar ahora — es gratis</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="highlight">
+            <div>
+              <h2 data-i18n="passenger.highlight_title">Descubre comercios y servicios cercanos</h2>
+              <p data-i18n="passenger.highlight_text">
+                El broadcast es la geovalla de negocio: Airbnb con punto fijo, domicilio en un radio de acción, o el local al que acabas de entrar.
+                Te suscribes una vez al canal; cuando vuelves, la app te notifica y abre el chat con la empresa.
+              </p>
+            </div>
+            <a data-i18n="passenger.explore" class="btn btn--outline btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades">Explorar la app</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--alt">
+        <div class="container">
+          <div class="banner">
+            <div>
+              <h3 data-i18n="passenger.lost_title">¿Olvidaste algo en el vehículo?</h3>
+              <p data-i18n="passenger.lost_text">Desde la app puedes contactar al conductor o reportar un inconveniente con tu viaje para recibir ayuda.</p>
+            </div>
+            <a data-i18n="passenger.go_app" class="btn btn--outline" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades">Ir a la app</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="passenger-cta">
+        <div class="container">
+          <div class="driver-cta">
+            <h2 data-i18n="passenger.cta_title">¿Quieres conducir con P2L?</h2>
+            <p data-i18n="passenger.cta_text">
+              Genera ingresos con tu vehículo, administra tus tiempos y recibe solicitudes de pasajeros cerca de ti.
+              También puedes operar tu propia flota desde el panel empresa.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
+              <a data-i18n="passenger.register_driver" class="btn btn--primary btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades">Registrarme como conductor</a>
+              <a data-i18n="passenger.fleet_panel" class="btn btn--outline btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard">Empresa</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ========== CONDUCTOR ========== -->
+    <div class="mode-panel" data-panel="driver" hidden>
+      <section class="section section--alt" id="driver-beneficios">
+        <div class="container">
+          <div class="section__head">
+            <h2 data-i18n="driver.benefits_title">Conduce con P2L</h2>
+            <p data-i18n="driver.benefits_lead">Activa tu disponibilidad, recibe solicitudes cerca de ti y administra tus carreras del día desde el celular.</p>
+          </div>
+          <div class="benefits">
+            <article class="benefit">
+              <div class="benefit__icon">📍</div>
+              <h3 data-i18n="driver.b1_title">Solicitudes cercanas</h3>
+              <p data-i18n="driver.b1_text">Recibe pedidos de pasajeros en tu zona y decide cuándo aceptar según tu disponibilidad.</p>
+            </article>
+            <article class="benefit">
+              <div class="benefit__icon">⚡</div>
+              <h3 data-i18n="driver.b2_title">Operación en tiempo real</h3>
+              <p data-i18n="driver.b2_text">Enciende o apaga tu disponibilidad cuando quieras. Trabaja en las franjas que te convengan.</p>
+            </article>
+            <article class="benefit">
+              <div class="benefit__icon">💬</div>
+              <h3 data-i18n="driver.b3_title">Chat</h3>
+              <p data-i18n="driver.b3_text">Sigue el trayecto en el mapa, coordina la recogida por chat y cierra el viaje al llegar.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="driver-servicios">
+        <div class="container">
+          <div class="section__head">
+            <h2 data-i18n="driver.services_title">Capacidades del conductor</h2>
+            <p data-i18n="driver.services_lead">Todo lo que necesitas para operar como conductor en la plataforma.</p>
+          </div>
+          <div class="services">
+            <article class="service">
+              <span data-i18n="driver.s1_tag" class="service__tag">Disponibilidad</span>
+              <h3 data-i18n="driver.s1_title">Modo en línea</h3>
+              <p data-i18n="driver.s1_text">Actívate para recibir solicitudes de pasajeros cercanos y pausa cuando no estés disponible.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="driver.s2_tag" class="service__tag">Matching</span>
+              <h3 data-i18n="driver.s2_title">Aceptar o rechazar</h3>
+              <p data-i18n="driver.s2_text">Revisa origen, destino y valor estimado antes de aceptar la carrera.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="driver.s3_tag" class="service__tag">Operación</span>
+              <h3 data-i18n="driver.s3_title">Viaje en curso</h3>
+              <p data-i18n="driver.s3_text">Gestiona el estado del viaje: en camino, recogiendo pasajero y finalizado.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="driver.s4_tag" class="service__tag">Mapa</span>
+              <h3 data-i18n="driver.s4_title">Recorrido en vivo</h3>
+              <p data-i18n="driver.s4_text">Visualiza la ruta y la ubicación del pasajero durante todo el servicio.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="driver.s5_tag" class="service__tag">Ingresos</span>
+              <h3 data-i18n="driver.s5_title">Historial de carreras</h3>
+              <p data-i18n="driver.s5_text">Consulta tus viajes completados y la actividad reciente del día.</p>
+            </article>
+            <article class="service">
+              <span data-i18n="driver.s6_tag" class="service__tag">Cercanos</span>
+              <h3 data-i18n="driver.s6_title">Descubre comercios y servicios</h3>
+              <p data-i18n="driver.s6_text">Al circular cerca de un restaurante, tienda, arriendo o punto de domicilio ves el canal de la empresa, te suscribes y chateas — igual que el pasajero, sin haber pedido un viaje.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="driver-como">
+        <div class="container">
+          <div class="section__head">
+            <h2 data-i18n="driver.how_title">Empieza a conducir en 3 pasos</h2>
+            <p data-i18n="driver.how_lead">Regístrate en el panel, únete a una flota o crea la tuya, y abre la app.</p>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="step__num">1</div>
+              <h3 data-i18n="driver.step1_title">Regístrate</h3>
+              <p data-i18n="driver.step1_text">Entra al panel empresa / cooperativa y crea o únete a una organización.</p>
+            </article>
+            <article class="step">
+              <div class="step__num">2</div>
+              <h3 data-i18n="driver.step2_title">Activa tu rol</h3>
+              <p data-i18n="driver.step2_text">El administrador te agrega como conductor. Tú abres la app e inicias sesión.</p>
+            </article>
+            <article class="step">
+              <div class="step__num">3</div>
+              <h3 data-i18n="driver.step3_title">Recibe solicitudes</h3>
+              <p data-i18n="driver.step3_text">Ponte en línea, acepta viajes cercanos y genera ingresos en tu barrio.</p>
+            </article>
+          </div>
+          <div style="margin-top: 40px; text-align: center;">
+            <a data-i18n="driver.open_app" class="btn btn--primary btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades">Abrir app conductor</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="highlight">
+            <div>
+              <h2 data-i18n="driver.highlight_title">Tú también descubres el barrio</h2>
+              <p data-i18n="driver.highlight_text">
+                El conductor no solo recibe viajes: entra al radio de un comercio o un arriendo y puede suscribirse al broadcast del canal.
+                La empresa te notifica y abre el chat cuando vuelves a la zona.
+              </p>
+            </div>
+            <a data-i18n="driver.go_panel" class="btn btn--outline btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard">Ir al panel</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="driver-cta">
+        <div class="container">
+          <div class="driver-cta">
+            <h2 data-i18n="driver.cta_title">¿Quieres conducir con P2L?</h2>
+            <p data-i18n="driver.cta_text">
+              Genera ingresos con tu vehículo, administra tus tiempos y recibe solicitudes de pasajeros cerca de ti.
+              También puedes operar tu propia flota desde el panel empresa.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
+              <a data-i18n="driver.register_driver" class="btn btn--primary btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades">Registrarme como conductor</a>
+              <a data-i18n="driver.fleet_panel" class="btn btn--outline btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard">Empresa</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ========== EMPRESA / FLOTA ========== -->
+    <div class="mode-panel" data-panel="fleet">
+      <section class="section section--alt" id="fleet-beneficios">
+        <div class="container">
+          <div class="section__head">
+            <h2 data-i18n="fleet.benefits_title">Tu empresa. Tu zona. Tu canal.</h2>
+            <p data-i18n="fleet.benefits_lead">
+              P2L permite a cualquier negocio activar una presencia comercial basada en ubicación: restaurante, tienda, inmobiliaria, hotel, domicilio, transporte o flota. Tu negocio tiene un canal dentro del mapa.
+            </p>
+          </div>
+          <div class="admin-grid">
+            <article class="admin-card">
+              <div class="admin-card__icon">🏢</div>
+              <h3 data-i18n="fleet.a1_title">Hazte visible donde ocurre la demanda</h3>
+              <p data-i18n="fleet.a1_text">Activa un broadcast (geovalla) y permite que las personas cercanas descubran tu negocio. Registra nombre, teléfono y responsable.</p>
+            </article>
+            <article class="admin-card">
+              <div class="admin-card__icon">👥</div>
+              <h3 data-i18n="fleet.a2_title">Publica tu oferta</h3>
+              <p data-i18n="fleet.a2_text">Invita por correo, asigna rol conductor y controla el tope de conductores según tu plan.</p>
+            </article>
+            <article class="admin-card">
+              <div class="admin-card__icon">💳</div>
+              <h3 data-i18n="fleet.a3_title">Planes, wallet y ePayco</h3>
+              <p data-i18n="fleet.a3_text">Elige Starter, Growth, Business o Enterprise. Paga con ePayco. El pasajero paga directo al operativo; P2L se cubre con el plan y el saldo prepago.</p>
+            </article>
+            <article class="admin-card">
+              <div class="admin-card__icon">📡</div>
+              <h3 data-i18n="fleet.a4_title">Conecta directamente</h3>
+              <p data-i18n="fleet.a4_text">Los usuarios y operativos pueden descubrir tu broadcast, suscribirse al canal y comunicarse contigo por chat cuando están cerca.</p>
+            </article>
+            <article class="admin-card">
+              <div class="admin-card__icon">📊</div>
+              <h3 data-i18n="fleet.a5_title">Administra tu operación</h3>
+              <p data-i18n="fleet.a5_text">Monitorea viajes completados, saldo de wallet, costo por viaje y vigencia de la suscripción.</p>
+            </article>
+            <article class="admin-card">
+              <div class="admin-card__icon">🧪</div>
+              <h3 data-i18n="fleet.a6_title">Prueba de 5 días</h3>
+              <p data-i18n="fleet.a6_text">Al crear la empresa aplican los cupos del plan elegido. Luego renuevas con ePayco (30 días).</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="fleet-servicios">
+        <div class="container">
+          <div class="section__head">
+            <h2 data-i18n="fleet.plans_title">Planes P2L para tu negocio</h2>
+            <p data-i18n="fleet.plans_lead">
+              Misma estructura del dashboard de administración: cupos de operativos, wallet prepago y participación empresa sugerida. El pasajero paga al operativo; P2L se cubre con el plan y el saldo prepago. Tres tipos de empresa: movilidad, domicilios y reservas. Prueba 5 días al registrarte; los planes de pago se renuevan con ePayco.
+            </p>
+          </div>
+          <div class="plans">
+            <article class="plan plan--starter">
+              <span class="plan__tier">PLAN STARTER</span>
+              <h3 data-i18n="plans.starter_headline">Starter — Recarga base</h3>
+              <p data-i18n="plans.price_starter" class="plan__price">$80.000 COP</p>
+              <p data-i18n="plans.starter_micro" class="plan__micro">Ideal para validar tu modelo de negocio sin riesgo</p>
+              <ul>
+                <li data-i18n="plans.starter_f1">1 operativo</li>
+                <li data-i18n="plans.starter_f2">200 viajes habilitados</li>
+                <li data-i18n="plans.starter_f3">Participación empresa sugerida: 20% del valor del viaje</li>
+                <li data-i18n="plans.starter_f4">Prueba completa por 5 días</li>
+              </ul>
+              <p data-i18n="plans.starter_billing" class="plan__billing">Entrada / recarga base</p>
+            </article>
+            <article class="plan plan--growth">
+              <span class="plan__tier">PLAN GROWTH</span>
+              <h3 data-i18n="plans.growth_headline">Growth — Opera en serio</h3>
+              <p data-i18n="plans.price_growth" class="plan__price">$700.000 COP / mes</p>
+              <p data-i18n="plans.growth_micro" class="plan__micro">Para negocios que ya están generando ingresos</p>
+              <ul>
+                <li data-i18n="plans.growth_f1">Hasta 10 operativos</li>
+                <li data-i18n="plans.growth_f2">2.000 viajes habilitados</li>
+                <li data-i18n="plans.growth_f3">Participación empresa sugerida: 20% del valor del viaje</li>
+                <li data-i18n="plans.growth_f4">Panel de gestión + soporte básico</li>
+              </ul>
+              <p data-i18n="plans.growth_billing" class="plan__billing">Suscripción: 30 días (ePayco)</p>
+            </article>
+            <article class="plan plan--business">
+              <span class="plan__tier">PLAN BUSINESS</span>
+              <h3 data-i18n="plans.business_headline">Business — Escala</h3>
+              <p data-i18n="plans.price_business" class="plan__price">$1.800.000 COP / mes</p>
+              <p data-i18n="plans.business_micro" class="plan__micro">Para empresas que quieren crecer sin límites técnicos</p>
+              <ul>
+                <li data-i18n="plans.business_f1">Hasta 25 operativos</li>
+                <li data-i18n="plans.business_f2">6.000 viajes habilitados</li>
+                <li data-i18n="plans.business_f3">Participación empresa sugerida: 20% del valor del viaje</li>
+                <li data-i18n="plans.business_f4">Analítica y soporte prioritario</li>
+              </ul>
+              <p data-i18n="plans.business_billing" class="plan__billing">Suscripción: 30 días (ePayco)</p>
+            </article>
+            <article class="plan plan--enterprise">
+              <span class="plan__tier">TENANT DEDICADO</span>
+              <h3 data-i18n="plans.enterprise_headline">Enterprise · Tu plataforma</h3>
+              <p data-i18n="plans.price_enterprise" class="plan__price">Desde $1.500.000 COP / mes</p>
+              <p data-i18n="plans.enterprise_micro" class="plan__micro">Tenant y BD aislados para operar una ciudad</p>
+              <ul>
+                <li data-i18n="plans.enterprise_f1">Hasta 100 conductores (City)</li>
+                <li data-i18n="plans.enterprise_f2">~35.000 viajes acumulados iniciales</li>
+                <li data-i18n="plans.enterprise_f3">Landing, tarifas y geocanales propios</li>
+                <li data-i18n="plans.enterprise_f4">Watchdog + soporte 24/7/365</li>
+              </ul>
+              <p class="plan__billing"><a href="#enterprise-tenant" data-i18n="plans.enterprise_billing">Ver planes Enterprise ↓</a></p>
+            </article>
+          </div>
+
+          <div class="enterprise-tenant" id="enterprise-tenant">
+            <div class="enterprise-tenant__head">
+              <h3 data-i18n="enterprise.title">Enterprise · Tenant dedicado</h3>
+            </div>
+            <div class="enterprise-tenant__factor">
+              <h3 data-i18n="enterprise.weight">Peso 1 viaje = 10,76 KB</h3>
+            </div>
+            <div class="enterprise-table-wrap">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="enterprise.th_product">Producto</th>
+                    <th data-i18n="enterprise.th_price">Precio mensual sugerido</th>
+                    <th data-i18n="enterprise.th_storage">Almacenamiento anual cubierto</th>
+                    <th data-i18n="enterprise.th_year">Capacidad viajes/año</th>
+                    <th data-i18n="enterprise.th_month">Viajes/mes</th>
+                    <th data-i18n="enterprise.th_day">Viajes/día</th>
+                    <th data-i18n="enterprise.th_needed">Conductores realizando un promedio de 10 viajes x día</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Enterprise City</strong></td>
+                    <td class="price">$1.500.000 COP/mes</td>
+                    <td data-i18n="enterprise.city_storage">0,5 GB/año</td>
+                    <td data-i18n="enterprise.city_year">~35.000</td>
+                    <td data-i18n="enterprise.city_month">~2.917</td>
+                    <td data-i18n="enterprise.city_day">~97</td>
+                    <td data-i18n="enterprise.city_needed">~10</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Enterprise Pro</strong></td>
+                    <td class="price">$2.500.000 COP/mes</td>
+                    <td data-i18n="enterprise.pro_storage">~0,7 GB/año</td>
+                    <td data-i18n="enterprise.pro_year">~62.500</td>
+                    <td data-i18n="enterprise.pro_month">~5.208</td>
+                    <td data-i18n="enterprise.pro_day">~173</td>
+                    <td data-i18n="enterprise.pro_needed">~17</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Enterprise Business</strong></td>
+                    <td class="price">$4.000.000 COP/mes</td>
+                    <td data-i18n="enterprise.business_storage">~1,61 GB/año</td>
+                    <td data-i18n="enterprise.business_year">~150.000</td>
+                    <td data-i18n="enterprise.business_month">~12.500</td>
+                    <td data-i18n="enterprise.business_day">~417</td>
+                    <td data-i18n="enterprise.business_needed">~42</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Enterprise Corporate</strong></td>
+                    <td class="price">$6.000.000–8.000.000 COP/mes</td>
+                    <td data-i18n="enterprise.corporate_storage">~1,94 GB/año</td>
+                    <td data-i18n="enterprise.corporate_year">~180.000</td>
+                    <td data-i18n="enterprise.corporate_month">~15.000</td>
+                    <td data-i18n="enterprise.corporate_day">~500</td>
+                    <td data-i18n="enterprise.corporate_needed">~50</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Enterprise XL</strong></td>
+                    <td class="price" data-i18n="enterprise.xl_price">Cotización</td>
+                    <td data-i18n="enterprise.xl_storage">Cotización</td>
+                    <td data-i18n="enterprise.xl_year">A medida</td>
+                    <td data-i18n="enterprise.xl_month">A medida</td>
+                    <td data-i18n="enterprise.xl_day">A medida</td>
+                    <td data-i18n="enterprise.xl_needed">A medida</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="enterprise-shared">
+              <h4 data-i18n="enterprise.shared_title">Todos los planes Enterprise incluyen</h4>
+              <ul>
+                <li data-i18n="enterprise.shared_f1">1 tenant aislado + base de datos aislada</li>
+                <li data-i18n="enterprise.shared_f2">Landing comercial propia</li>
+                <li data-i18n="enterprise.shared_f3">Tarifas y planes personalizados</li>
+                <li data-i18n="enterprise.shared_f4">Geocanales y geovallas</li>
+                <li data-i18n="enterprise.shared_f5">Integración de plataforma de pagos</li>
+                <li data-i18n="enterprise.shared_f6">Watchdog IA 24/7 + escalamiento humano</li>
+                <li data-i18n="enterprise.shared_f7">Soporte humano 24/7/365</li>
+                <li data-i18n="enterprise.shared_f8">Pasajeros registrados: sin límite comercial rígido</li>
+                <li data-i18n="enterprise.shared_f9">Soporte de desarrollo (tarifas e integración de pagos)</li>
+              </ul>
+            </div>
+            <div style="margin-top:20px; text-align:center;">
+              <a class="btn btn--primary btn--lg" href="https://wa.me/573187813116" data-i18n="enterprise.cta">Contactar ventas Enterprise</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--alt" id="fleet-como">
+        <div class="container">
+          <div class="section__head">
+            <h2 data-i18n="fleet.how_title">Cómo activas el broadcast de tu canal geográfico</h2>
+            <p data-i18n="fleet.how_lead">Empresa → broadcast (geovalla) → oferta → personas y operativos cercanos descubren el canal → se suscriben → chat → avisos al regresar.</p>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="step__num">1</div>
+              <h3 data-i18n="fleet.step1_title">Crea la empresa</h3>
+              <p data-i18n="fleet.step1_text">Entra al dashboard, registra tu restaurante, tienda, agencia, local o flota y elige el plan con el que iniciarás la prueba.</p>
+            </article>
+            <article class="step">
+              <div class="step__num">2</div>
+              <h3 data-i18n="fleet.step2_title">Invita conductores</h3>
+              <p data-i18n="fleet.step2_text">Define tu broadcast (geovalla), publica tu oferta e invita operativos. Controla cupos según el plan contratado.</p>
+            </article>
+            <article class="step">
+              <div class="step__num">3</div>
+              <h3 data-i18n="fleet.step3_title">Opera y renueva</h3>
+              <p data-i18n="fleet.step3_text">Monitorea wallet y viajes. Cuando termine la prueba, paga con ePayco para renovar 30 días.</p>
+            </article>
+          </div>
+          <div style="margin-top: 40px; text-align: center; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
+            <a data-i18n="fleet.enter_panel" class="btn btn--primary btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard">Entrar al panel empresa</a>
+            <a data-i18n="nav.payments" class="btn btn--outline btn--lg" href="tarifas-y-pagos.html">Tarifas y pagos</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="fleet-cta">
+        <div class="container">
+          <div class="driver-cta">
+            <h2 data-i18n="fleet.cta_title">Activa el broadcast de tu canal geográfico</h2>
+            <p data-i18n="fleet.cta_text">
+              Tu negocio tiene un canal dentro del mapa. Usuarios y operativos descubren tus productos, servicios, propiedades o domicilios cuando están cerca.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
+              <a data-i18n="fleet.register_driver" class="btn btn--primary btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades">Registrarme como conductor</a>
+              <a data-i18n="fleet.open_fleet" class="btn btn--outline btn--lg" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard">Abrir panel empresa</a>
+              <a data-i18n="nav.payments" class="btn btn--outline btn--lg" href="tarifas-y-pagos.html">Tarifas y pagos</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">
+            <strong>P2L</strong>
+          </div>
+          <p style="margin:0; max-width:280px;" data-i18n="footer.blurb">
+            P2L conecta personas, empresas, bienes y servicios según su ubicación. Movilidad, marketplace local y domicilios con canales geográficos y broadcast.
+          </p>
+        </div>
+        <div>
+          <h4 data-i18n="footer.passengers">Usuario</h4>
+          <ul>
+            <li><a data-i18n="modes.passenger" href="#" data-mode="passenger">Usuario</a></li>
+            <li><a data-i18n="footer.how" href="#passenger-como" data-mode="passenger">Cómo funciona</a></li>
+            <li><a data-i18n="footer.enter_app" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades">Entrar a la app</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 data-i18n="footer.drivers">Operativo</h4>
+          <ul>
+            <li><a data-i18n="modes.driver" href="#" data-mode="driver">Operativo</a></li>
+            <li><a data-i18n="footer.register" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard">Registrarme</a></li>
+            <li><a data-i18n="footer.open_app" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades">Abrir app</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 data-i18n="footer.company">Empresa</h4>
+          <ul>
+            <li><a data-i18n="modes.fleet" href="#" data-mode="fleet">Empresa</a></li>
+            <li><a data-i18n="nav.payments" href="tarifas-y-pagos.html">Tarifas y pagos</a></li>
+            <li><a data-i18n="footer.admin_dash" href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard">Dashboard admin</a></li>
+            <li><a data-i18n="footer.plans" href="#fleet-servicios" data-mode="fleet">Planes</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__legal">
+        <a
+          id="footerTerms"
+          data-i18n="footer.terms"
+          href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard&legal=terms"
+        >Condiciones de Uso</a>
+        <span class="footer__legal-sep" aria-hidden="true">·</span>
+        <a
+          id="footerPrivacy"
+          data-i18n="footer.privacy"
+          href="https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard&legal=privacy"
+        >Política de Privacidad</a>
+      </div>
+      <p class="footer__copy">© <span id="year"></span> <span data-i18n="footer.copy">P2L · Plataforma geográfica</span></p>
+    </div>
+  </footer>
+
+  <a
+    class="wa-float"
+    href="https://wa.me/573187813116"
+    target="_blank"
+    rel="noopener noreferrer"
+    data-i18n-aria="nav.whatsapp"
+    aria-label="Contactar por WhatsApp al 318 781 3116"
+    title="WhatsApp"
+  >
+    <i class="fa-brands fa-whatsapp wa-float__icon" aria-hidden="true"></i>
+  </a>
+
+  <script src="https://unpkg.com/i18next@23.4.6/i18next.min.js"></script>
+  <script src="scripts/locales-embed.js?v=20260819g"></script>
+  <script src="scripts/i18n.js?v=20260816k"></script>
+  <script>
+    const UNIDADES_LINKS = {
+      login: 'https://www.refactorii.com/p2l-tenant/?redirect=/unidades',
+      dashboard: 'https://www.refactorii.com/p2l-tenant/?redirect=/unidades-dashboard'
+    };
+
+    const MODE_META = {
+      passenger: { navCta: 'cta', ctaHref: UNIDADES_LINKS.login, navAudienceKey: 'nav.drivers', titleKey: 'meta.title_passenger' },
+      driver: { navCta: 'cta', ctaHref: UNIDADES_LINKS.login, navAudienceKey: 'nav.fleet', titleKey: 'meta.title_driver' },
+      fleet: { navCta: 'servicios', ctaHref: UNIDADES_LINKS.dashboard, navAudienceKey: 'nav.plans', titleKey: 'meta.title_fleet' }
+    };
+
+    function modeFromHash() {
+      const h = String(location.hash || '');
+      if (h.startsWith('#driver-')) return 'driver';
+      if (h.startsWith('#passenger-')) return 'passenger';
+      if (h.startsWith('#fleet-')) return 'fleet';
+      return 'fleet';
+    }
+
+    const PROFILE_THEME = {
+      fleet: '#4f46e5',
+      passenger: '#0d9488',
+      driver: '#0284c7'
+    };
+
+    function syncThemeColor(mode) {
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', PROFILE_THEME[mode] || PROFILE_THEME.fleet);
+    }
+    let currentMode = 'fleet';
+    let i18nReady = false;
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const header = document.getElementById('header');
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
+    const headerCta = document.getElementById('headerCta');
+    const headerCtaMobile = document.getElementById('headerCtaMobile');
+    const navAudienceLink = document.getElementById('navAudienceLink');
+
+    function t(key, fallback) {
+      if (typeof i18next !== 'undefined' && i18next.isInitialized) {
+        const v = i18next.t(key, { returnObjects: true });
+        if (v != null && v !== key) return v;
+      }
+      return fallback != null ? fallback : null;
+    }
+
+    function getModeCopy(mode) {
+      const m = MODE_META[mode] || MODE_META.passenger;
+      const prefix = `hero.${mode}`;
+      const badgesRaw = t(`${prefix}.badges`, []);
+      const badgeList = Array.isArray(badgesRaw)
+        ? badgesRaw.map((b) => [b.icon || '', b.strong || '', b.rest || ''])
+        : [];
+      return {
+        eyebrow: t(`${prefix}.eyebrow`),
+        titleHtml: t(`${prefix}.title`),
+        lead: t(`${prefix}.lead`),
+        badges: badgeList,
+        pill: t(`${prefix}.pill`),
+        phoneTitle: t(`${prefix}.phone_title`),
+        phoneSub: t(`${prefix}.phone_sub`),
+        navAudience: t(m.navAudienceKey),
+        navCta: m.navCta,
+        ctaHref: m.ctaHref,
+        ctaLabel: t('nav.use_tuki'),
+        docTitle: t(m.titleKey)
+      };
+    }
+
+    const phoneMock = document.getElementById('phoneMock');
+
+    function syncPhoneVisual(mode) {
+      if (!phoneMock) return;
+      phoneMock.classList.toggle('phone-mock--fleet', mode === 'fleet');
+    }
+
+    function applyPlatformCta(mode) {
+      const href = (MODE_META[mode] || MODE_META.fleet).ctaHref;
+      [headerCta, headerCtaMobile].forEach((el) => {
+        if (!el) return;
+        el.setAttribute('href', href);
+        el.setAttribute('data-login-mode', mode);
+      });
+      applyLegalFooterLinks(mode);
+    }
+
+    function applyLegalFooterLinks(mode) {
+      const base = mode === 'fleet' ? UNIDADES_LINKS.dashboard : UNIDADES_LINKS.login;
+      const accent = mode === 'driver' ? '&accent=driver' : '';
+      const terms = document.getElementById('footerTerms');
+      const privacy = document.getElementById('footerPrivacy');
+      if (terms) terms.setAttribute('href', `${base}&legal=terms${accent}`);
+      if (privacy) privacy.setAttribute('href', `${base}&legal=privacy${accent}`);
+    }
+
+    function setMode(mode, opts = {}) {
+      if (!MODE_META[mode]) mode = 'fleet';
+      currentMode = mode;
+      syncPhoneVisual(mode);
+      syncThemeColor(mode);
+      applyPlatformCta(mode);
+      if (!i18nReady && !(window.unidadesI18n && window.unidadesI18n.ready)) {
+        document.body.dataset.mode = mode;
+        document.querySelectorAll('.mode-panel').forEach((panel) => {
+          panel.hidden = panel.getAttribute('data-panel') !== mode;
+        });
+        document.querySelectorAll('.hero__ctas [data-mode]').forEach((btn) => {
+          const active = btn.getAttribute('data-mode') === mode;
+          btn.classList.toggle('is-active', active);
+          btn.classList.toggle('btn--primary', active);
+          btn.classList.toggle('btn--outline', !active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        return;
+      }
+
+      const copy = getModeCopy(mode);
+      document.body.dataset.mode = mode;
+      if (copy.docTitle) document.title = copy.docTitle;
+
+      const titleEl = document.querySelector('title');
+      if (titleEl) {
+        titleEl.setAttribute('data-i18n', MODE_META[mode].titleKey);
+        if (copy.docTitle) titleEl.textContent = copy.docTitle;
+      }
+
+      if (copy.eyebrow) document.getElementById('heroEyebrow').textContent = copy.eyebrow;
+      if (copy.titleHtml) document.getElementById('heroTitle').innerHTML = copy.titleHtml;
+      if (copy.lead) document.getElementById('heroLead').textContent = copy.lead;
+      if (copy.pill) document.getElementById('phonePill').textContent = copy.pill;
+      if (copy.phoneTitle) document.getElementById('phoneCardTitle').textContent = copy.phoneTitle;
+      if (copy.phoneSub) document.getElementById('phoneCardSub').textContent = copy.phoneSub;
+      if (copy.navAudience) {
+        navAudienceLink.textContent = copy.navAudience;
+        navAudienceLink.setAttribute('data-i18n', MODE_META[mode].navAudienceKey);
+      }
+
+      applyPlatformCta(mode);
+      if (copy.ctaLabel) {
+        headerCta.textContent = copy.ctaLabel;
+        headerCtaMobile.textContent = copy.ctaLabel;
+      }
+
+      document.querySelectorAll('[data-nav]').forEach((link) => {
+        const key = link.getAttribute('data-nav');
+        const section = key === 'cta' && copy.navCta === 'servicios' ? 'servicios' : key;
+        link.setAttribute('href', `#${mode}-${section}`);
+      });
+
+      if (copy.badges.length) {
+        document.getElementById('heroBadges').innerHTML = copy.badges.map(([icon, strong, rest]) =>
+          `<span class="hero__badge"><span class="hero__badge-icon" aria-hidden="true">${icon}</span> <strong>${strong}</strong> ${rest}</span>`
+        ).join('');
+      }
+
+      document.querySelectorAll('.hero__ctas [data-mode]').forEach((btn) => {
+        const active = btn.getAttribute('data-mode') === mode;
+        btn.classList.toggle('is-active', active);
+        btn.classList.toggle('btn--primary', active);
+        btn.classList.toggle('btn--outline', !active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+
+      document.querySelectorAll('.mode-panel').forEach((panel) => {
+        panel.hidden = panel.getAttribute('data-panel') !== mode;
+      });
+
+      if (!opts.skipScroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    document.querySelectorAll('[data-mode]').forEach((el) => {
+      if (el === document.body || el.hasAttribute('data-platform-cta')) return;
+      el.addEventListener('click', (e) => {
+        const mode = el.getAttribute('data-mode');
+        if (!MODE_META[mode]) return;
+        e.preventDefault();
+        setMode(mode);
+        mainNav.classList.remove('is-open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.textContent = '☰';
+        const hash = el.getAttribute('href');
+        if (hash && hash.startsWith('#') && hash.length > 1) {
+          requestAnimationFrame(() => {
+            const target = document.querySelector(hash);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+      });
+    });
+
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('is-scrolled', window.scrollY > 8);
+    }, { passive: true });
+
+    menuToggle.addEventListener('click', () => {
+      const open = mainNav.classList.toggle('is-open');
+      menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menuToggle.textContent = open ? '✕' : '☰';
+      const label = t(open ? 'nav.menu_close' : 'nav.menu_open', open ? 'Cerrar menú' : 'Abrir menú');
+      if (label) menuToggle.setAttribute('aria-label', label);
+    });
+
+    mainNav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        mainNav.classList.remove('is-open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.textContent = '☰';
+      });
+    });
+
+    window.onUnidadesI18nReady = function () {
+      i18nReady = true;
+      setMode(currentMode, { skipScroll: true });
+    };
+
+    window.onUnidadesLocaleChange = function (_lang, opts) {
+      i18nReady = true;
+      setMode(currentMode, { skipScroll: !!(opts && opts.skipScroll) });
+    };
+
+    // Empresa por defecto; respeta deep links #passenger- / #driver- / #fleet-
+    setMode(modeFromHash(), { skipScroll: true });
+
+    // Si i18n terminó antes de registrar el callback
+    if (window.unidadesI18n && window.unidadesI18n.ready) {
+      i18nReady = true;
+      setMode(currentMode, { skipScroll: true });
+    }
+  </script>
+</body>
+</html>

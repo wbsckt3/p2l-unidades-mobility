@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Simulation Lab · una pestaña · 20260826 · MobileTec</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --baas: #1d4ed8;
+      --baas-soft: #dbeafe;
+      --empresa: #6d28d9;
+      --empresa-soft: #ede9fe;
+      --conductor: #0f766e;
+      --conductor-soft: #ccfbf1;
+      --solicitante: #c2410c;
+      --solicitante-soft: #ffedd5;
+      --ok: #15803d;
+      --warn: #b45309;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 480px at 10% -10%, #dbeafe 0%, transparent 55%),
+        radial-gradient(900px 420px at 100% 0%, #ccfbf1 0%, transparent 50%),
+        var(--bg);
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 28px 18px 64px;
+    }
+    header { margin-bottom: 22px; }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+    }
+    .brand-row__label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .brand-row__logos {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .brand-row__logo {
+      height: 52px;
+      width: auto;
+      max-width: min(180px, 38vw);
+      object-fit: contain;
+      display: block;
+    }
+    .brand-row__logo--p2l {
+      height: 48px;
+      width: 78px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .brand-row__plus {
+      font-size: 1.75rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--muted);
+      user-select: none;
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 4vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 42rem;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 0;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+    .chip--baas { background: var(--baas-soft); color: var(--baas); border-color: #bfdbfe; }
+    .chip--empresa { background: var(--empresa-soft); color: var(--empresa); border-color: #ddd6fe; }
+    .chip--conductor { background: var(--conductor-soft); color: var(--conductor); border-color: #99f6e4; }
+    .chip--solicitante { background: var(--solicitante-soft); color: var(--solicitante); border-color: #fed7aa; }
+    .chip--shared { background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 18px 16px;
+      margin-top: 14px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+    }
+    section h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    ol, ul { margin: 0; padding-left: 1.2rem; }
+    li { margin: 0.35rem 0; }
+    .role {
+      font-weight: 800;
+      padding: 0.05em 0.28em;
+      border-radius: 0.35em;
+    }
+    .role-baas { color: var(--baas); background: var(--baas-soft); }
+    .role-empresa { color: var(--empresa); background: var(--empresa-soft); }
+    .role-conductor { color: var(--conductor); background: var(--conductor-soft); }
+    .role-solicitante { color: var(--solicitante); background: var(--solicitante-soft); }
+    .shared {
+      color: #0369a1;
+      background: #e0f2fe;
+      font-weight: 800;
+      padding: 0.05em 0.28em;
+      border-radius: 0.35em;
+    }
+    code.shared, .mono.shared {
+      color: #0369a1;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+    }
+    .h2-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      margin: 0 0 10px;
+    }
+    .h2-row h2 { margin: 0; }
+    .profile-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .orb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(15, 23, 42, 0.08);
+    }
+    .orb--baas { background: var(--baas); }
+    .orb--empresa { background: var(--empresa); }
+    .orb--conductor { background: var(--conductor); }
+    .orb--solicitante { background: var(--solicitante); }
+    .orb--shared { background: #0284c7; }
+    .mini-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+    .mini-chip--empresa { background: var(--empresa-soft); color: var(--empresa); border-color: #ddd6fe; }
+    .mini-chip--conductor { background: var(--conductor-soft); color: var(--conductor); border-color: #99f6e4; }
+    .mini-chip--solicitante { background: var(--solicitante-soft); color: var(--solicitante); border-color: #fed7aa; }
+    .mini-chip--shared { background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+    .kv {
+      display: grid;
+      gap: 4px 12px;
+      grid-template-columns: minmax(9rem, 38%) 1fr;
+      align-items: start;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--line);
+      font-size: 0.95rem;
+    }
+    .kv:last-child { border-bottom: 0; }
+    .kv dt {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.86rem;
+    }
+    .kv dd {
+      margin: 0;
+      font-weight: 700;
+      word-break: break-word;
+    }
+    a {
+      color: inherit;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+    }
+    a:hover { opacity: 0.85; }
+    code, .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88em;
+      font-weight: 700;
+      background: #f1f5f9;
+      padding: 0.12em 0.35em;
+      border-radius: 6px;
+    }
+    .note {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .note strong { color: var(--ink); }
+    .note--warn {
+      background: #fffbeb;
+      border-color: #fde68a;
+      color: #92400e;
+    }
+    .note--ok {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      color: #166534;
+    }
+    .defect {
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 10px 0 0;
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+    }
+    .defect h3 {
+      margin: 0 0 6px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #b91c1c;
+    }
+    .defect p { margin: 0; color: #7f1d1d; font-size: 0.92rem; }
+    .fix {
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 10px 0 0;
+      border: 1px solid #bbf7d0;
+      background: #f0fdf4;
+    }
+    .fix h3 {
+      margin: 0 0 6px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #166534;
+    }
+    .fix p { margin: 0; color: #14532d; font-size: 0.92rem; }
+    h3.block {
+      margin: 14px 0 8px;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+    .url-card {
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 10px 0 0;
+      border: 1px solid transparent;
+    }
+    .url-card--conductor {
+      background: var(--conductor-soft);
+      border-color: #99f6e4;
+    }
+    .url-card--solicitante {
+      background: var(--solicitante-soft);
+      border-color: #fed7aa;
+    }
+    .url-card__label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: 0 0 6px;
+    }
+    .url-card--conductor .url-card__label { color: var(--conductor); }
+    .url-card--solicitante .url-card__label { color: var(--solicitante); }
+    .url-card a {
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      word-break: break-all;
+      line-height: 1.45;
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 50%;
+      background: #0f172a;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .files {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.86rem;
+      line-height: 1.7;
+      margin: 0;
+      padding: 10px 12px;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      overflow-x: auto;
+    }
+    .files .req { color: #5eead4; }
+    .files .opt { color: #94a3b8; }
+    .files .front { color: #fcd34d; }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    p { margin: 0 0 10px; }
+    p:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand-row" aria-label="Powered by P2L y MobileTec">
+        <span class="brand-row__label">Powered by</span>
+        <span class="brand-row__logos">
+          <img class="brand-row__logo brand-row__logo--p2l" src="assets/logo-p2l.png" alt="P2L" width="48" height="48" />
+          <span class="brand-row__plus" aria-hidden="true">+</span>
+          <img class="brand-row__logo" src="assets/mobilitec-logo.png" alt="MobileTec" width="160" height="52" />
+        </span>
+      </div>
+      <p class="kicker">MobileTec · Simulation Lab</p>
+      <h1>Cómo probar el flujo de viaje sin salir a la calle</h1>
+      <p class="sub">
+        Una sola pestaña de
+        <span class="role role-solicitante">solicitante</span>:
+        el panel QA es el mando del
+        <span class="role role-conductor">conductor mock</span>
+        (segunda sesión socket invisible, email real de la empresa).
+        GPS sintético sobre la vista real. Viajes que sí se persisten en Mongo.
+        Jest cubre el backend en desarrollo; el lab cubre la interfaz.
+        Complementa el diseño de pruebas de ruta
+        <a href="pruebas-ruta-20260825.html">20260825</a>.
+      </p>
+      <div class="legend" aria-label="Leyenda de roles">
+        <span class="chip chip--baas"><span class="dot"></span>Admin BAAS Tenant</span>
+        <span class="chip chip--empresa"><span class="dot"></span>Admin de empresa</span>
+        <span class="chip chip--conductor"><span class="dot"></span>Conductor</span>
+        <span class="chip chip--solicitante"><span class="dot"></span>Solicitante</span>
+        <span class="chip chip--shared"><span class="dot"></span>ID / clave compartidos</span>
+      </div>
+    </header>
+
+    <section>
+      <h2>Resumen final · plan completado</h2>
+      <p class="note note--ok" style="margin-top:0;">
+        <strong>Plan completado.</strong> El pasajero ahora sí ve el viaje: los
+        <strong>30 tests del backend pasan</strong> (22 nuevos en
+        <code>rideFlow.passenger.test.js</code> + 8 que ya existían) y el build del frontend compila.
+      </p>
+      <p>
+        En la prueba de ruta del 25 de agosto el
+        <span class="role role-conductor">conductor</span> recibió la solicitud y avanzó el viaje,
+        pero el <span class="role role-solicitante">solicitante</span> se quedó en blanco.
+        Había <strong>dos defectos independientes</strong>: cualquiera de los dos, por sí solo,
+        bastaba para dejar al pasajero sin progreso.
+      </p>
+
+      <div class="defect">
+        <h3>Defecto 1 · backend: la FSM se congelaba en DRIVER_ASSIGNED</h3>
+        <p>
+          La máquina exigía
+          <code>DRIVER_ASSIGNED → DRIVER_EN_ROUTE → ARRIVED → IN_PROGRESS → COMPLETED</code>,
+          pero nadie emitía jamás <code>driver_en_route</code>. El conductor mandaba
+          <code>arrived_pickup</code>, que el backend no reconocía (solo comparaba
+          <code>status === 'arrived'</code>). Entonces
+          <code>manager.arrived()</code>, <code>start()</code> y <code>complete()</code>
+          lanzaban excepción de transición inválida. Esas excepciones se tragaban con
+          <code>catch (_) {}</code> y el <code>emitToRideRoom(...)</code> estaba
+          <strong>dentro del mismo try</strong>, después de la llamada que lanzaba:
+          <code>ride:arrived</code>, <code>ride:start</code> y <code>ride:complete</code>
+          nunca salían hacia el pasajero. La persistencia en Mongo tampoco se escribía.
+          Además, cuatro eventos (<code>updateLocation</code>, <code>arrived</code>,
+          <code>start</code>, <code>complete</code>) iban <strong>solo al room</strong>
+          del viaje: si el <code>joinContext</code> del pasajero fallaba en el accept,
+          perdía todo el tracking.
+        </p>
+      </div>
+      <div class="defect">
+        <h3>Defecto 2 · frontend: el status inyectado se descartaba al desenvolver</h3>
+        <p>
+          En <code>RideOrchestrator</code> se hacía
+          <code>handleStatusEvent({ ...(d || {}), status: 'arrived' })</code>.
+          El EventRouter envuelve el evento en
+          <code>{ context, event, geohash, payload, timestamp }</code>.
+          El status se ponía en el sobre exterior; al desenvolver
+          <code>data?.payload ?? data</code> se perdía, y
+          <code>if (!status) return</code> abortaba. Incluso con la FSM sana, los hitos
+          se ignoraban en silencio.
+        </p>
+      </div>
+      <div class="fix">
+        <h3>Qué quedó corregido</h3>
+        <p>
+          La FSM admite <code>DRIVER_ASSIGNED → ARRIVED</code> directo y
+          <code>pathTo</code> avanza en cascada si se pierde un hito. La emisión al pasajero
+          ocurre <strong>fuera</strong> del try de la transición (con log si se rechaza).
+          <code>arrived_pickup</code> se normaliza a <code>arrived</code>. Los hitos y la
+          posición van al room <strong>y</strong> directo a los sockets del pasajero.
+          El orquestador inyecta el status <strong>después</strong> de desenvolver.
+          <code>ride:snapshot</code> ya no revierte “en curso” a “aceptado”. Chat y
+          rehidratación cubren <code>arrived</code> e <code>in_progress</code>.
+          El conductor anuncia <code>driver_en_route</code> al arrancar el GPS; cada
+          posición lleva ETA en vivo; la tarjeta del conductor (email + empresa) se
+          muestra en todas las fases. Las sesiones terminales se purgan para no bloquear
+          solicitudes nuevas.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Dos instancias de prueba · no se sustituyen</h2>
+      <p>
+        En esta página hay <strong>dos capas distintas</strong>. No son el mismo test
+        repetido: una cubre el backend en desarrollo y la otra la interfaz
+        solicitante–conductor en el producto.
+      </p>
+      <dl>
+        <div class="kv">
+          <dt>Instancia back · Jest</dt>
+          <dd>
+            Nivel <strong>desarrollo</strong>. Corre en Node, sin navegador, sin GPS y
+            sin dos pestañas. Afirma la máquina de estados, que los hitos se emitan al
+            pasajero y que la regresión del 25 de agosto no vuelva en silencio.
+            Archivo: <code>modelos_back/tests/rideFlow.passenger.test.js</code>.
+          </dd>
+        </div>
+        <div class="kv">
+          <dt>Instancia front · simulación guiada</dt>
+          <dd>
+            Nivel <strong>interfaz usuario–conductor</strong>. Una pestaña de
+            <code>P2LUnidadesView</code> (pasajero) + panel
+            <strong>Conductor mock</strong>. El viaje es real: socket, FSM, mapa y Mongo.
+            No hace falta abrir la URL de conductor.
+          </dd>
+        </div>
+      </dl>
+      <p class="note">
+        Jest no “abre el lab”. El lab no “corre Jest”. Si Jest pasa y el pasajero sigue
+        en blanco en el lab, falta desplegar front/back a producción. Si el lab se ve
+        bien y Jest falla, la FSM se rompió en código y hay que corregir antes de
+        publicar.
+      </p>
+    </section>
+
+    <section>
+      <h2>¿Cómo resuelve Uber la simulación de pruebas automatizadas de la interfaz usuario–conductor?</h2>
+      <p>
+        Uber no pone a un ingeniero de pasajero y a otro de conductor en el mismo
+        edificio con el GPS del teléfono. En QA <strong>el GPS del dispositivo no manda</strong>:
+        cada rol recibe un <em>location stream</em> inyectado (coordenadas sintéticas o
+        una traza grabada) que entra por el <strong>mismo pipeline</strong> que un viaje
+        de producción: matching, FSM, sockets, mapa y persistencia.
+      </p>
+      <ul>
+        <li>
+          El <span class="role role-solicitante">solicitante</span> queda anclado en el
+          pickup (o en un mock de origen).
+        </li>
+        <li>
+          El <span class="role role-conductor">conductor</span> arranca
+          <strong>cientos de metros más lejos</strong> y recorre una polyline hacia el
+          origen y luego hacia el destino. Así existe el tramo “va en camino”, el ETA y
+          los modales de llegada.
+        </li>
+        <li>
+          Las pruebas de interfaz (driver simulator / replay de traces) ejercitan la
+          <strong>experiencia</strong>: mapa, cards, botones, chat. Las pruebas de
+          servicio (unidad / contrato sobre la máquina de estados) ejercitan la
+          <strong>lógica</strong> sin UI. Son dos instancias, como Jest y el lab aquí.
+        </li>
+      </ul>
+      <p>
+        Por eso <strong>PC + celular en el mismo punto no sirve</strong> como prueba de
+        matching: ambos GPS son el mismo edificio, no hay recorrido, los modales saltan
+        y el pasajero no ve el auto acercarse. Uber no prueba así la interfaz
+        usuario–conductor.
+      </p>
+      <p>
+        En P2L el equivalente de ese driver simulator es el
+        <strong>Simulation Lab</strong> (<code>/unidades-simulacion-lab</code>): coloca al
+        conductor ~950&nbsp;m al sur del pickup y <strong>Simular traslado</strong>
+        recorre la ruta emitiendo <code>ride:position</code>. Mientras corre,
+        <strong>ignora el GPS real</strong>. Sigue siendo la vista de producto, no un
+        teatro de <code>localStorage</code>.
+      </p>
+      <dl>
+        <div class="kv">
+          <dt>Usar · Simulation Lab</dt>
+          <dd>
+            Misma <code>P2LUnidadesView</code>, mock de Google, socket real, FSM real,
+            Mongo real. Es la instancia <strong>front</strong> de esta página.
+          </dd>
+        </div>
+        <div class="kv">
+          <dt>No usar · simulador local</dt>
+          <dd>
+            Viajes <code>sim_</code> / <code>_pending</code> de
+            <code>rideFlowSimulator.js</code>. Solo front y
+            <code>localStorage</code>. <strong>No pasa por la FSM</strong> y no deja
+            filas en BD. No habría detectado el bug del 25 de agosto.
+          </dd>
+        </div>
+      </dl>
+      <p class="note note--ok">
+        <strong>Dirección correcta:</strong> GPS sintético sobre el producto (como Uber
+        en QA). Los viajes quedan en la colección <code>Ride</code> del tenant, igual
+        que uno de calle.
+      </p>
+    </section>
+
+    <section>
+      <div class="h2-row">
+        <h2>Credenciales · misma empresa que la prueba 20260825</h2>
+        <span class="profile-mark">
+          <span class="orb orb--empresa" aria-hidden="true"></span>
+          <span class="mini-chip mini-chip--empresa">Admin empresa</span>
+          <span class="orb orb--shared" aria-hidden="true"></span>
+          <span class="mini-chip mini-chip--shared">ID / clave</span>
+        </span>
+      </div>
+      <p class="note" style="margin-top:0;margin-bottom:12px;">
+        Ambas pestañas deben usar el mismo <span class="shared">ID</span> y
+        <span class="shared">clave de empresa</span>. El conductor del lab debe ser
+        <span class="role role-conductor">miembro driver</span> de esa empresa
+        (<code>validateDriver</code> falla si no).
+      </p>
+      <dl>
+        <div class="kv">
+          <dt>Empresa</dt>
+          <dd><span class="role role-empresa">Tests MobileTec</span></dd>
+        </div>
+        <div class="kv">
+          <dt>
+            <span class="orb orb--shared" aria-hidden="true" style="margin-right:4px;vertical-align:middle;"></span>
+            ID empresa
+          </dt>
+          <dd><code class="shared">6a8cdddfe7a107e907122af5</code></dd>
+        </div>
+        <div class="kv">
+          <dt>
+            <span class="orb orb--shared" aria-hidden="true" style="margin-right:4px;vertical-align:middle;"></span>
+            Clave empresa
+          </dt>
+          <dd><code class="shared">6e86f528514f0d92ada919bd</code></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="role role-conductor">Conductor</span> (email en la URL)</dt>
+          <dd class="mono">emailConductorRegistradoEnEmpresa@gmail.com</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section>
+      <div class="h2-row">
+        <h2>Instancia front · montar el escenario (una pestaña)</h2>
+        <span class="profile-mark">
+          <span class="orb orb--solicitante" aria-hidden="true"></span>
+          <span class="mini-chip mini-chip--solicitante">Solicitante + conductor mock</span>
+        </span>
+      </div>
+      <p class="note note--ok" style="margin-top:0;">
+        <strong>Una sola URL.</strong> El mapa y «Solicitar viaje» son del
+        <span class="role role-solicitante">solicitante</span>.
+        El panel <strong>Conductor mock</strong> es el mando del conductor
+        (Aceptar → Ir al origen → Registrar llegada → Iniciar destino → Completar).
+        No abras una segunda pestaña.
+      </p>
+
+      <div class="url-card url-card--solicitante">
+        <p class="url-card__label">Única pestaña · Solicitante + panel conductor mock</p>
+        <a href="https://www.refactorii.com/p2l-tenant/unidades/simulacion-lab?role=passenger&amp;qa=true" target="_blank" rel="noopener">https://www.refactorii.com/p2l-tenant/unidades/simulacion-lab?role=passenger&amp;qa=true</a>
+      </div>
+      <div class="url-card url-card--conductor">
+        <p class="url-card__label">Pestaña A · Conductor · automatizada en el panel; no abrir</p>
+        <a href="https://www.refactorii.com/p2l-tenant/unidades/simulacion-lab?role=driver&amp;qa=true&amp;driverEmail=emailConductorRegistradoEnEmpresa@gmail.com" target="_blank" rel="noopener">https://www.refactorii.com/p2l-tenant/unidades/simulacion-lab?role=driver&amp;qa=true&amp;driverEmail=emailConductorRegistradoEnEmpresa@gmail.com</a>
+        <p class="note" style="margin:8px 0 0;">Opcional: solo si quieres dos dispositivos reales. El camino documentado es la URL de pasajero de arriba.</p>
+      </div>
+
+      <p class="note">
+        La URL canónica interna es <code>/unidades-simulacion-lab</code>.
+        En producción <code>/p2l-tenant/unidades/simulacion-lab</code> ya redirige ahí.
+        Equivalente directo:
+        <a href="https://www.refactorii.com/p2l-tenant/unidades-simulacion-lab?role=passenger&amp;qa=true" target="_blank" rel="noopener">/p2l-tenant/unidades-simulacion-lab</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2>Plan de simulación guiada · paso a paso (instancia front)</h2>
+      <ol>
+        <li>
+          <span class="step-num">1</span>
+          Abre la URL de <span class="role role-solicitante">solicitante</span>
+          (<code>?role=passenger&amp;qa=true</code>). Debe verse
+          <strong>Simulation Lab · pasajero + conductor mock</strong>.
+          En el modal ingresa correo del conductor, <span class="shared">ID</span> y
+          <span class="shared">clave</span> de empresa. Espera a que el panel
+          <strong>Conductor mock</strong> loguee <code>available</code>
+          (si dice “0 conductores”, espera GPS + esos tres datos y vuelve a solicitar).
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          Destino a <strong>varios cientos de metros</strong>, no “aquí mismo”.
+          El GPS del mock se inyecta ~950&nbsp;m al sur del pasajero.
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <span class="role role-solicitante">Solicitante</span>: <strong>Solicitar viaje</strong>
+          y confirma tarifa. Eso emite <code>ride:request</code> real.
+        </li>
+        <li>
+          <span class="step-num">4</span>
+          En el panel <span class="role role-conductor">Conductor mock</span>:
+          <strong>Aceptar solicitud</strong>. El matching es el de producción
+          (<code>ride:accept</code>, wallet, CompanyMember).
+        </li>
+        <li>
+          <span class="step-num">5</span>
+          Panel: <strong>Ir al origen del viaje (sim)</strong>. El bot recorre la polyline y manda
+          <code>ride:position</code> (con ETA). Al arrancar también sale
+          <code>driver_en_route</code>. El mapa del pasajero se mueve solo con
+          <code>ride:updateLocation</code> (no se anima el marcador del usuario).
+        </li>
+        <li>
+          <span class="step-num">6</span>
+          En el mapa valida, en este orden:
+          tarjeta del conductor (email + empresa) →
+          “Tu conductor llega en ~N min” → auto moviéndose → llegada al origen.
+        </li>
+        <li>
+          <span class="step-num">7</span>
+          Panel: <strong>Registrar llegada</strong> →
+          <strong>Iniciar hacia destino</strong> (el bot recorre pickup→destino) →
+          <strong>Completar viaje</strong>.
+        </li>
+        <li>
+          <span class="step-num">8</span>
+          En Mongo, colección <code>Ride</code> del tenant: el viaje debe terminar en
+          <code>COMPLETED</code> (no quedarse en <code>DRIVER_ASSIGNED</code>, que era el bug).
+        </li>
+      </ol>
+      <p class="note">
+        Si el pasajero se queda en blanco otra vez, el backend de producción
+        <strong>aún no tiene la corrección de la FSM</strong>. Si ves ETA + fases, las mejoras
+        están vivas.
+      </p>
+    </section>
+
+    <section>
+      <h2>Qué se está validando (correcciones del 26 de agosto)</h2>
+      <ul>
+        <li>La FSM ya no se congela en <code>DRIVER_ASSIGNED</code>: admite
+          <code>DRIVER_ASSIGNED → ARRIVED</code> y avanza en cascada si se pierde un hito.</li>
+        <li><code>arrived_pickup</code> del conductor se reconoce como <code>arrived</code>.</li>
+        <li><code>ride:arrived</code> / <code>start</code> / <code>complete</code> /
+          <code>updateLocation</code> salen al pasajero aunque no esté en el room del viaje.</li>
+        <li>El orquestador del cliente ya no descarta el status al desenvolver el sobre del EventRouter.</li>
+        <li><code>ride:snapshot</code> no revierte “en curso” a “aceptado”.</li>
+        <li>Chat y rehidratación funcionan también en <code>arrived</code> e <code>in_progress</code>.</li>
+        <li>ETA en vivo y tarjeta del conductor visibles en todas las fases con conductor asignado.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Archivos de <code>modelos_back</code> que debes actualizar en producción</h2>
+      <p>
+        Copiar / desplegar estos en el servidor Node. Sin este paquete el lab de producción
+        sigue el bug: el conductor avanza y el pasajero no ve el viaje.
+      </p>
+      <pre class="files" aria-label="Listado de archivos backend"># Obligatorios (runtime de la FSM)
+modelos_back/core/RideStateMachine.js
+modelos_back/core/RideSessionManager.js
+modelos_back/plugins/ride.plugin.js
+modelos_back/server.js
+
+# Tests (no hace falta en el servidor; sí para npm test antes de deploy)
+modelos_back/tests/rideFlow.passenger.test.js</pre>
+      <p class="note" style="margin-top:12px;">
+        Tras copiar: <code>cd modelos_back</code> → <code>npm test</code> (debe pasar 30 tests) →
+        reiniciar el proceso Node. No hay migración de Mongo ni variable de entorno nueva
+        obligatoria. Opcionales: <code>P2L_RIDE_PURGE_TICK_MS</code> y
+        <code>P2L_RIDE_PURGE_MAX_AGE_MS</code> (purga de viajes terminales; defaults 10&nbsp;min / 30&nbsp;min).
+      </p>
+    </section>
+
+    <section>
+      <h2>Instancia back · tests Jest (máquina de estados, sin GPS ni dos pestañas)</h2>
+      <p>
+        Esta es la instancia de <strong>desarrollo / backend</strong>. No sustituye al lab:
+        no abre mapa ni valida ETA en pantalla. Fija la causa raíz en silencio: que el
+        pasajero reciba los hitos aunque la FSM falle o el socket no esté en el room.
+        Instancia <code>RideStateMachine</code>, <code>RideSessionManager</code> y
+        <code>ride.plugin</code> con sockets mock. La instancia front (lab) está más
+        arriba, en la pestaña única del lab.
+      </p>
+      <h3 class="block">Cómo correrlos</h3>
+      <pre class="files">cd modelos_back
+npm test
+# o solo el archivo de la corrección:
+npx jest tests/rideFlow.passenger.test.js --coverage=false</pre>
+      <p class="note" style="margin-top:10px;">
+        Resultado esperado: <strong>3 suites, 30 tests, 0 fallos</strong>.
+        <code>rideFlow.passenger.test.js</code> = 22 tests nuevos.
+        <code>rideSession.behavior.test.js</code> = 4 (reconnect / matching; ya existían).
+        <code>enterpriseCapacity.test.js</code> = 4 (capacidad; ya existían).
+      </p>
+      <h3 class="block">Cómo está armado el mock (para ampliar tests después)</h3>
+      <ul>
+        <li>
+          <code>MockSocket</code> extiende <code>EventEmitter</code> y guarda cada
+          <code>emit</code> en <code>this.emitted</code>. Así se afirma
+          “el pasajero recibió <code>ride:arrived</code>” sin Socket.IO real.
+        </li>
+        <li>
+          Si el constructor <strong>no</strong> recibe <code>rooms</code>, el socket
+          <strong>no está en</strong> <code>ride:{rideId}</code>: simula el
+          <code>joinContext</code> fallido del accept (el caso que dejaba la pantalla en blanco).
+        </li>
+        <li>
+          Si se pasa <code>rooms: ['ride:ride-hitos']</code>, el helper no debe emitir
+          directo (el room ya lo entrega): evita duplicar el evento.
+        </li>
+        <li>
+          <code>seedAssignedRide()</code> crea la sesión y asigna conductor:
+          deja el viaje en <code>DRIVER_ASSIGNED</code> para disparar hitos aislados,
+          como si el accept ya hubiera ocurrido.
+        </li>
+        <li>
+          Los handlers se invocan igual que en <code>server.js</code>:
+          <code>ridePlugin.events['ride:arrived'](driver, { rideId })</code>.
+        </li>
+      </ul>
+      <h3 class="block">Qué cubre cada bloque</h3>
+      <dl>
+        <div class="kv">
+          <dt>RideStateMachine (6)</dt>
+          <dd>
+            Cadena completa válida; nueva transición
+            <code>DRIVER_ASSIGNED → ARRIVED</code>; rechazo de inválidas;
+            <code>pathTo</code> (intermedios, idempotente, no atraviesa terminales).
+          </dd>
+        </div>
+        <div class="kv">
+          <dt>RideSessionManager (7)</dt>
+          <dd>
+            <code>arrived</code> / <code>start</code> / <code>complete</code> desde
+            <code>DRIVER_ASSIGNED</code> (cascada); hito duplicado no lanza;
+            no avanza sin conductor; <code>purgeTerminal</code> borra viejos y conserva recientes.
+          </dd>
+        </div>
+        <div class="kv">
+          <dt>ride.plugin (9) · los clave</dt>
+          <dd>
+            <code>ride:arrived</code> llega aunque el pasajero no esté en el room;
+            no duplica si sí está; <strong>arrived / start / complete se emiten igual
+            cuando la transición se rechaza</strong> (regresión del 25 de agosto);
+            <code>arrived_pickup</code> → <code>ARRIVED</code>;
+            <code>driver_en_route</code> funciona;
+            <code>updateLocation</code> fuera del room trae <code>etaSeconds</code>;
+            secuencia completa termina en <code>COMPLETED</code>.
+          </dd>
+        </div>
+      </dl>
+      <p class="note">
+        Para simular un hito nuevo en adelante: seed de sesión → llamar el handler del plugin
+        con el socket mock del conductor →
+        <code>expect(passenger.eventsNamed('ride:…').length).toBe(1)</code>
+        y <code>expect(manager.get(rideId).status).toBe(RIDE_STATES.…)</code>.
+        Si el evento debe llegar “aunque la FSM falle”, deja la sesión en
+        <code>MATCHING</code> (sin <code>assignDriver</code>) y afirma que el emit ocurre igual.
+      </p>
+    </section>
+
+    <section>
+      <h2>Trazabilidad · archivos tocados en la corrección</h2>
+      <p>
+        Lista para auditar el bug más adelante. Lo marcado como runtime hay que
+        desplegarlo; los tests no van al servidor Node.
+      </p>
+      <h3 class="block">Backend (<code>modelos_back</code>)</h3>
+      <dl>
+        <div class="kv">
+          <dt><code>core/RideStateMachine.js</code></dt>
+          <dd>
+            <code>DRIVER_ASSIGNED → ARRIVED</code> válido. Helper
+            <code>pathTo(from, to)</code> para cascada.
+          </dd>
+        </div>
+        <div class="kv">
+          <dt><code>core/RideSessionManager.js</code></dt>
+          <dd>
+            <code>advance()</code> usa <code>pathTo</code>.
+            <code>arrived</code> / <code>start</code> / <code>complete</code> /
+            <code>driverEnRoute</code> ya no fallan por un hito perdido.
+            <code>purgeTerminal()</code> y marca <code>terminalAt</code>.
+          </dd>
+        </div>
+        <div class="kv">
+          <dt><code>plugins/ride.plugin.js</code></dt>
+          <dd>
+            <code>resolvePassengerSockets</code> + <code>emitRideEventToParticipants</code>
+            (room + directo). <code>applyRideMilestone</code> emite fuera del try.
+            Alias <code>arrived_pickup</code>. ETA en <code>handleRidePosition</code>.
+            <code>companyName</code> en el payload de aceptación.
+          </dd>
+        </div>
+        <div class="kv">
+          <dt><code>server.js</code></dt>
+          <dd>Intervalo de purga de sesiones terminales (cada 10 min por defecto).</dd>
+        </div>
+        <div class="kv">
+          <dt><code>tests/rideFlow.passenger.test.js</code></dt>
+          <dd>22 tests nuevos de la regresión (Jest). No es runtime.</dd>
+        </div>
+      </dl>
+      <h3 class="block">Frontend</h3>
+      <dl>
+        <div class="kv">
+          <dt><code>src/ride/RideOrchestrator.js</code></dt>
+          <dd>
+            <code>withStatus</code>: inyecta el status <em>después</em> de desenvolver el sobre.
+          </dd>
+        </div>
+        <div class="kv">
+          <dt><code>src/views/P2LUnidadesView.vue</code></dt>
+          <dd>
+            Snapshot no degrada fase. Chat y restore en
+            <code>accepted | arrived | in_progress</code>.
+            <code>driver_en_route</code> al iniciar GPS. ETA y tarjeta del conductor.
+            Botón <strong>Simular traslado</strong> (ya existía; ahora el pasajero sí ve el flujo).
+          </dd>
+        </div>
+        <div class="kv">
+          <dt><code>src/views/UberLikeView.vue</code></dt>
+          <dd>Misma corrección de cliente (vista genérica; Tuki es solo wrapper).</dd>
+        </div>
+        <div class="kv">
+          <dt><code>P2LUnidadesSimulacionView.vue</code></dt>
+          <dd>
+            Wrapper del lab. Para el bug FSM no hacía falta. Para el lab de
+            <strong>un tab</strong> sí: el correo del conductor se pide en el modal
+            (la URL ya no lleva <code>driverEmail</code>) y el título pasa a
+            «pasajero + conductor mock».
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Front que también hay que desplegar (si no, el lab no muestra ETA ni driver_en_route)</h2>
+      <pre class="files">src/ride/RideOrchestrator.js
+src/views/P2LUnidadesView.vue
+src/views/P2LUnidadesSimulacionView.vue
+src/views/UberLikeView.vue
+src/composables/useLabDriverBot.js
+src/composables/useUberLikeQaPanel.js
+src/components/QaLabPanel.vue</pre>
+      <p class="note">
+        <code>P2LUnidadesSimulacionView.vue</code> ya no lee <code>driverEmail</code>
+        en <code>role=passenger</code>: correo, ID y clave van en el modal.
+        Tuki no requiere archivo propio: monta <code>P2LUnidadesView</code>.
+      </p>
+    </section>
+
+    <section>
+      <h2>¿Hay que tocar la URL de simulación en producción?</h2>
+      <p class="note note--ok" style="margin-top:0;">
+        <strong>No.</strong> La ruta ya existe y Nginx no necesita un location nuevo.
+        <code>/p2l-tenant/unidades/simulacion-lab</code> ya redirige a
+        <code>/unidades-simulacion-lab</code>. Lo que falta no es la URL: es desplegar
+        <strong>backend (FSM) + front (P2LUnidadesView)</strong> para que esa URL corra el flujo
+        corregido.
+      </p>
+      <dl>
+        <div class="kv">
+          <dt>URL canónica</dt>
+          <dd><code>/unidades-simulacion-lab</code></dd>
+        </div>
+        <div class="kv">
+          <dt>URL de producto (ya redirige)</dt>
+          <dd><code>/p2l-tenant/unidades/simulacion-lab</code></dd>
+        </div>
+        <div class="kv">
+          <dt>Query canónica (una pestaña)</dt>
+          <dd><code>?role=passenger&amp;qa=true</code> (correo + ID + clave en el modal)</dd>
+        </div>
+        <div class="kv">
+          <dt>Query conductor (opcional; no abrir)</dt>
+          <dd><code>?role=driver&amp;qa=true&amp;driverEmail=…</code></dd>
+        </div>
+        <div class="kv">
+          <dt>No usar</dt>
+          <dd>
+            <code>/simulacion</code> o <code>/simulacion-lab</code> del Uber-like genérico.
+            Ese lab no es el white-label Unidades (empresa, wallet, conductores de Tests MobileTec).
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section>
+      <div class="h2-row">
+        <h2>Instancia BAAS (contexto, no hace falta abrirla para esta prueba)</h2>
+        <span class="profile-mark">
+          <span class="orb orb--baas" aria-hidden="true"></span>
+          <span class="mini-chip" style="background:var(--baas-soft);color:var(--baas);border-color:#bfdbfe;">Admin BAAS</span>
+        </span>
+      </div>
+      <dl>
+        <div class="kv">
+          <dt>URL BAAS Tenant</dt>
+          <dd><a href="https://www.refactorii.com/p2l-tenant/baas-tenant-dashboard" target="_blank" rel="noopener">baas-tenant-dashboard</a></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="role role-baas">Admin BAAS Tenant</span></dt>
+          <dd class="mono">emailAdminTenant@gmail.com</dd>
+        </div>
+        <div class="kv">
+          <dt>Dashboard empresa</dt>
+          <dd><a href="https://www.refactorii.com/p2l-tenant/unidades-dashboard/" target="_blank" rel="noopener">unidades-dashboard/</a></dd>
+        </div>
+      </dl>
+    </section>
+
+    <footer>
+      MobileTec · Simulation Lab 20260826 ·
+      <span class="role role-conductor">conductor</span> (teal) ·
+      <span class="role role-solicitante">solicitante</span> (naranja) ·
+      <span class="shared">ID/clave</span> (cian) ·
+      <a href="pruebas-ruta-20260825.html">pruebas de ruta 20260825</a>.
+    </footer>
+  </div>
+</body>
+</html>
